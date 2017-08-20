@@ -34,23 +34,16 @@
 #include <GUIClient.h>
 
 //Defines GUI comm handler special characters
-#define ESC  27		//escape char
-#define START 1		//start packet
-#define STOP  2		//stop packet
+static const int ESC   = 27;	//escape char
+static const int START = 1;		//start packet
+static const int STOP  = 2;		//stop packet
 
 //Defines GUI comm handler data sets
-#define IMAGE  		    2	//uint16_t image packet
-#define POINTS 		    4	//points packet
-#define VECTORS 	    6	//uint8_t vectors packet
-#define IMAGE_CHAR	    8	//uint8_t image packet
-#define VECTORS_SHORT	10	//uint16_t vectors packet
-
-//Defines GUI comm handler data sets
-#define IMAGE  		    2	//uint16_t image packet
-#define POINTS 		    4	//points packet
-#define VECTORS 	    6	//uint8_t vectors packet
-#define IMAGE_CHAR	    8	//uint8_t image packet
-#define VECTORS_SHORT	10	//uint16_t vectors packet
+static const int IMAGE  	= 	  2;	//uint16_t image packet
+static const int POINTS 	= 	  4;	//points packet
+static const int VECTORS 	 =    6;	//uint8_t vectors packet
+static const int IMAGE_CHAR	   =  8;	//uint8_t image packet
+static const int VECTORS_SHORT	= 10;	//uint16_t vectors packet
 
 GUIClient::GUIClient(void)
 {

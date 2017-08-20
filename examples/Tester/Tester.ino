@@ -69,21 +69,21 @@
 // GLOBAL VARIABLES
 
 // pins
-#define RESP   3
-#define INCP   4
-#define RESV   5
-#define INCV   8
-
+static const uint8_t RESP = 3;
+static const uint8_t INCP = 4;
+static const uint8_t RESV = 5;
+static const uint8_t INCV = 8;
+ 
 // recall from note above that image arrays are stored row-size in a 1D array
 
 static uint16_t img[MAX_PIXELS];        // 1D image array
 
-static uint8_t row=MAX_ROWS;            // maximum rows allowed by memory
-static uint8_t col=MAX_COLS;            // maximum cols allowed by memory
-static uint8_t skiprow=SKIP_PIXELS;     // pixels to be skipped during readout because of downsampling
-static uint8_t skipcol=SKIP_PIXELS;     // pixels to be skipped during readout because of downsampling 
-static uint8_t sr=START_PIXEL;          // first pixel row to read
-static uint8_t sc=START_PIXEL;          // first pixel col to read
+static uint8_t row = MAX_ROWS;            // maximum rows allowed by memory
+static uint8_t col = MAX_COLS;            // maximum cols allowed by memory
+static uint8_t skiprow = SKIP_PIXELS;     // pixels to be skipped during readout because of downsampling
+static uint8_t skipcol = SKIP_PIXELS;     // pixels to be skipped during readout because of downsampling 
+static uint8_t sr = START_PIXEL;          // first pixel row to read
+static uint8_t sc = START_PIXEL;          // first pixel col to read
 
 static uint8_t input=0;                 // which vision chip to read from
 

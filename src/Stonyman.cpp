@@ -38,24 +38,24 @@ policies, either expressed or implied, of Centeye, Inc.
 /*********************************************************************/
 //SMH System Registers
 
-#define SMH_SYS_COLSEL 0	//select column
-#define SMH_SYS_ROWSEL 1	//select row
-#define SMH_SYS_VSW    2	//vertical switching
-#define SMH_SYS_HSW    3	//horizontal switching
-#define SMH_SYS_VREF   4	//voltage reference
-#define SMH_SYS_CONFIG 5	//configuration register
-#define SMH_SYS_NBIAS  6	//nbias
-#define SMH_SYS_AOBIAS 7	//analog out bias
+static const int SMH_SYS_COLSEL = 0;	//select column
+static const int SMH_SYS_ROWSEL = 1;	//select row
+static const int SMH_SYS_VSW    = 2;	//vertical switching
+static const int SMH_SYS_HSW    = 3;	//horizontal switching
+static const int SMH_SYS_VREF   = 4;	//voltage reference
+static const int SMH_SYS_CONFIG = 5;	//configuration register
+static const int SMH_SYS_NBIAS  = 6;	//nbias
+static const int SMH_SYS_AOBIAS = 7;	//analog out bias
 
 /*********************************************************************/
 
 // Supply voltage types
 // Notation: AVB is A.B volts. e.g. 5V0 is 5V, 3V3 is 3.3V, etc.
-#define SMH1_VDD_5V0  1
+static const int SMH1_VDD_5V0   = 1;
 
-#define SMH_VREF_5V0 30		//vref for 5 volts
-#define SMH_NBIAS_5V0 55	//nbias for 5 volts
-#define SMH_AOBIAS_5V0 55	//aobias for 5 volts
+static const int SMH_VREF_5V0   = 30;	//vref for 5 volts
+static const int SMH_NBIAS_5V0  = 55;	//nbias for 5 volts
+static const int SMH_AOBIAS_5V0 = 55;	//aobias for 5 volts
 
 Stonyman::Stonyman(uint8_t resp, uint8_t incp, uint8_t resv, uint8_t incv, uint8_t inphi)
 {

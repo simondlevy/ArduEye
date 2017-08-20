@@ -41,12 +41,12 @@ policies, either expressed or implied, of Centeye, Inc.
 //and START_ROW/COL to 16 to center the resulting
 //80x80 raw grid on the Stonyman raw 112x112 array.
 
-#define MAX_ROWS    10    
-#define MAX_COLS    10
-#define SKIP_PIXELS 8
-#define START_ROW   16
-#define START_COL   16
-#define START_PIXEL 8  
+static const uint8_t MAX_ROWS    = 10;
+static const uint8_t MAX_COLS    = 10;
+static const uint8_t SKIP_PIXELS = 8;
+static const uint8_t START_ROW   = 16;
+static const uint8_t START_COL   = 16;
+static const uint8_t START_PIXEL = 8;  
 
 #else
 
@@ -58,16 +58,16 @@ policies, either expressed or implied, of Centeye, Inc.
 //start row and col at 8, the 96x96 raw grid is 
 //centered on the Stonyman 112x112 raw array.
 
-#define MAX_ROWS    16
-#define MAX_COLS    16
-#define SKIP_PIXELS 4
-#define START_ROW   24
-#define START_COL   24  
-#define START_PIXEL 18
+static const uint8_t MAX_ROWS    = 16;
+static const uint8_t MAX_COLS    = 16;
+static const uint8_t SKIP_PIXELS = 4;
+static const uint8_t START_ROW   = 24;
+static const uint8_t START_COL   = 24; 
+static const uint8_t START_PIXEL = 18;
 
 #endif
 
-#define MAX_PIXELS (MAX_ROWS*MAX_COLS)
+static const uint16_t MAX_PIXELS  = MAX_ROWS * MAX_COLS;
 
 /**
  *	A class for interacting with the Stonyman2 vision chip from Centeye, Inc.
