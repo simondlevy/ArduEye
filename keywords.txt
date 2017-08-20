@@ -1,0 +1,100 @@
+#######################################
+# Syntax Coloring Map ArduEyeSMH
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ArduEyeSMH	KEYWORD1
+ArduEye_SMH	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin	KEYWORD2
+calcMask	KEYWORD2
+applyMask	KEYWORD2
+getImage	KEYWORD2
+getImageRowSum	KEYWORD2
+getImageColSum	KEYWORD2
+findMax	KEYWORD2
+chipToMatlab	KEYWORD2
+sectionToMatlab	KEYWORD2
+setBinning	KEYWORD2
+setPointer	KEYWORD2
+setValue	KEYWORD2
+setPointerValue	KEYWORD2
+incValue	KEYWORD2
+pulseInphi	KEYWORD2
+clearValues	KEYWORD2
+setConfig	KEYWORD2
+setAmpGain	KEYWORD2
+setAnalogInput	KEYWORD2
+setADCInput	KEYWORD2
+setVREF	KEYWORD2
+setNBIAS	KEYWORD2
+setAOBIAS	KEYWORD2
+setBiases	KEYWORD2
+setBiasesVdd	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+#######################################
+# Syntax Coloring Map For Test
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ArduEyeGUI	KEYWORD1
+ArduEye_GUI	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+start 	KEYWORD2
+stop		KEYWORD2
+sendImage	KEYWORD2
+sendPoints	KEYWORD2
+sendVectors KEYWORD2
+getCommand	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+#######################################
+# Syntax Coloring Map ArduEyeSMH
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ArduEyeOFO	KEYWORD1
+ArduEye_OFO	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+LPF	KEYWORD2
+IIA_1D	KEYWORD2
+IIA_Plus_2D	KEYWORD2
+LK_Plus_2D	KEYWORD2
+IIA_Square_2D	KEYWORD2
+LK_Square_2D	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
