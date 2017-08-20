@@ -1,5 +1,5 @@
 This repository contains Aruduino libraries for using the Stonyman2 vision chip from Centeye.
-Most of this code was adapted from the [ArduEye repositories](https://github.com/ArduEye), following
+Most of this code was adapted from the original [ArduEye repositories](https://github.com/ArduEye), following
 current Arduino practices.
 
 The <b>examples</b> folder contains the following sketches:
