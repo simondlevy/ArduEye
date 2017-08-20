@@ -43,77 +43,112 @@
 
 #include <Arduino.h>
 
-/*********************************************************************/
-//Defines GUI comm handler special characters
-
-#define ESC  27		//escape char
-#define START 1		//start packet
-#define STOP  2		//stop packet
-
-/*********************************************************************/
-//Defines GUI comm handler data sets
-
-#define IMAGE  		    2	//uint16_t image packet
-#define POINTS 		    4	//points packet
-#define VECTORS 	    6	//uint8_t vectors packet
-#define IMAGE_CHAR	    8	//uint8_t image packet
-#define VECTORS_SHORT	10	//uint16_t vectors packet
-
-/*********************************************************************/
-//	GUIClient
-/*********************************************************************/
-
+/**
+  * A class for communicating with a GUI like the one in ArduEyeGUI.pde
+  */
 class GUIClient
 {
-    // user-accessible "public" interface
     public:
 
-        // constructor has detected variable turned off
-        // GUI functions must be enabled by command sent from
-        // GUI on start-up.
-        GUIClient(void);		//constructor
+        /**
+          * Constructs a GUIClient object.
+          * GUI functions must be enabled by command sent from GUI on start-up.
+          */
+        GUIClient(void);		
 
-        // enables all functions, called in response to special
-        // command from GUI
+        /**
+        * Enables all functions. Called in response to special command from GUI.
+        */
         void start(void);		//allow Arduino to send data
 
-        // disables all functions so unreadable data isn't sent to 
-        // the serial monitor
+        /**
+          * Disables all functions so unreadable data isn't sent to  the serial monitor
+          */
         void stop(void);		//don't allow Arduino to send data
 
-        // sends the escape character plus the passed in uint8_t, used
-        // to send header information
-        void sendEscChar(uint8_t);	//send escape plus special char	
+        /**
+        * Sends the escape character plus another chacater.
+        * Can be used for sending header information.
+        * @param out extra character to send
+        */
+        void sendEscChar(char extra);
 
-        // sends the given uint8_t to the GUI, but if the uint8_t is an
-        // escape character, it sends it twice.
-        void sendDataByte(uint8_t);	//send data (repeats ESC char)
+        /**
+        * Writes a data byte to the serial port.  
+        * If the byte is the escape character, then it is duplicated to 
+        * indicate that it is a regular data character.
+        * @param data the data byte to send
+        */
+        void sendDataByte(uint8_t data);	
 
-        // read available data from Serial port and parse into
-        // command and argument.  Also intercepts special command
-        // from GUI 
-        void getCommand(char*,int*);
+        /**
+        * Checks the serial port for incoming commands and parses them into
+        * command and argument using the format "X#", where "X" is a single
+        * character and "#" is an optional number. The number "#" may be omitted,
+        * or may be one or more digits in size. The extracted command character
+        * and number argument are returned via pointers.  The special command !0
+        * and !1, which enables and disables the GUI, is intercepted here, but
+        * still passed through.
+        * @param command the single-character command
+        * @param argument the command argument
+        */
 
-        // sends image for display in GUI.  First two arguments are
-        // number of rows and columns.  Third argument is a uint16_t or
-        // char 1D image array, and final argument is total size of
-        // array			
-        void sendImage(uint8_t,uint8_t,uint16_t*,uint16_t);
-        void sendImage(uint8_t,uint8_t,char*,uint16_t);
+        void getCommand(char * command, int * argument);
 
-        // sends a set of vectors to be displayed in the GUI on top of    
-        // any image.  First two arguments are the number of rows and 
-        // columns in the VECTOR display (not image).  Third argument
-        // is an array of char or uint16_t pairs, each one a vector (X,Y)   
-        // to be displayed, and final argument is number of vectors.	
+        /**
+        *	Sends an image to the GUI for display.
+        *
+        *	@param rows number of rows in image
+        *	@param cols number of cols in image
+        *	@param pixels a 1D array of uint16_t pixel values in the image
+        *	@param size number of pixels in image (rows*cols)
+        */
+
+        void sendImage(uint8_t rows, uint8_t cols, uint16_t * pixels, uint16_t size);
+
+        /**
+         * Eight-bit version of above.
+         */
+        void sendImage(uint8_t rows, uint8_t cols, uint8_t * pixels, uint16_t size);
+
+
+        /**
+        * Sends an array of vectors to the GUI for display
+        *
+        * @param rows number of rows in vector display (NOT IMAGE)
+        * @param cols number of cols in vector display (NOT IMAGE)
+        * @param vectors an array of vectors in [X1,Y1,X2,Y2,...] format
+        * @param numvecs number of vectors (size of vector/2)
+        *
+        * Example:
+        *
+        * &nbsp;&nbsp;&nbsp;&nbsp;<tt>uint16_t vectors[4] = {vx1,vy1,vx2,vy2};</tt><br>
+        * &nbsp;&nbsp;&nbsp;&nbsp;<tt>sendVectors(1,2,vectors, 2);</tt><br><br>
+        * displays a 1x2 array of two vectors in the display windows
+        * which means vx will display on the left and vy on the right
+        */
+        void sendVectors(uint8_t rows, uint8_t cols, uint16_t * vectors, uint16_t numvecs);
+
+        /**
+         * Eight-bit version of above.
+         */
         void sendVectors(uint8_t,uint8_t,int8_t*,uint16_t);
-        void sendVectors(uint8_t,uint8_t,uint16_t*,uint16_t);
 
-        // sends an array of points to be highlighted on the image in
-        // the GUI.  First two arguments are number of rows and columns
-        // in the display image.  Third argument is a uint8_t array with
-        // pairs of (row,col) that should be highlighted, and final 
-        // argument is number of pairs.
+        /**
+        * Sends an array of points to highlight in the GUI display.
+        *
+        * @param rows number of rows in image
+        * @param cols number of cols in image
+        * @param points an array of points in [r1,c1,r2,c2,...] format
+        * @param numpts number of points (size of points/2)
+        *
+        * Example:
+        *
+        * &nbsp;&nbsp;&nbsp;&nbsp;<tt>char points[4]={2,4,10,11};</tt><br>
+        * &nbsp;&nbsp;&nbsp;&nbsp;<tt>sendpoints(16,16,points,2);</tt><br><br>
+        * on a 16x16 array, highlights the points (2,4) and (10,11)
+        */
+
         void sendPoints(uint8_t,uint8_t,uint8_t*,uint16_t);
 
 

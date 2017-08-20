@@ -1,6 +1,5 @@
 /*
-   GUIClient.cpp
-   Centeye Library to interface with the Processing GUI
+   GUIClient.cpp Library to interface with the Processing GUI
 
    Copyright (c) 2012 Centeye, Inc. 
    All rights reserved.
@@ -34,10 +33,24 @@
 #include <Arduino.h>
 #include <GUIClient.h>
 
-/*********************************************************************/
-//	Constructor
-//	Defaults to no GUI, no GUI commands will be sent
-/*********************************************************************/
+//Defines GUI comm handler special characters
+#define ESC  27		//escape char
+#define START 1		//start packet
+#define STOP  2		//stop packet
+
+//Defines GUI comm handler data sets
+#define IMAGE  		    2	//uint16_t image packet
+#define POINTS 		    4	//points packet
+#define VECTORS 	    6	//uint8_t vectors packet
+#define IMAGE_CHAR	    8	//uint8_t image packet
+#define VECTORS_SHORT	10	//uint16_t vectors packet
+
+//Defines GUI comm handler data sets
+#define IMAGE  		    2	//uint16_t image packet
+#define POINTS 		    4	//points packet
+#define VECTORS 	    6	//uint8_t vectors packet
+#define IMAGE_CHAR	    8	//uint8_t image packet
+#define VECTORS_SHORT	10	//uint16_t vectors packet
 
 GUIClient::GUIClient(void)
 {
@@ -64,16 +77,6 @@ void GUIClient::stop(void)
 {
     detected=false;	//GUI not detected
 }
-
-/*********************************************************************/
-//	getCommand
-//	checks the serial port for incoming commands and parses them
-//	into command and argument using the format "X#", where "X" is a //	single character and "#" is an optional number. The number "#" 
-//	may be omitted, or may be one or more digits in size. The 
-//	extracted command character and number argument are returned
-// 	via pointers.  The special command !0 and !1, which enables and
-//	disables the GUI, is intercepted here, but still passed through.
-/*********************************************************************/
 
 void GUIClient::getCommand(char *command, int *argument) 
 {
@@ -119,24 +122,11 @@ void GUIClient::getCommand(char *command, int *argument)
     }        
 }
 
-/*********************************************************************/
-//	sendEscChar
-//	write the sent-in uint8_t preceded by the escape character.  
-//	This is used for special characters
-/*********************************************************************/
-
-void GUIClient::sendEscChar(uint8_t char_out)
+void GUIClient::sendEscChar(char extra)
 { 
     Serial.write(ESC);		//send escape char
-    Serial.write(char_out);	//send special char
+    Serial.write(extra);	//send extra char
 }
-
-/*********************************************************************/
-//	sendDataByte
-//	writes the data uint8_t to the serial port.  If the data uint8_t is
-//	the escape character, then it is duplicated to indicate that
-//	it is a regular data uint8_t.
-/*********************************************************************/
 
 void GUIClient::sendDataByte(uint8_t data_out)
 {
@@ -149,17 +139,6 @@ void GUIClient::sendDataByte(uint8_t data_out)
     }
 
 }
-
-/*********************************************************************/
-//	sendImage (uint16_t version)
-//	sends an image to the GUI for display
-//
-//	ARGUMENTS:
-//	rows: number of rows in image
-//	cols: number of cols in image
-//	pixels: a 1D array of uint16_t pixel values in the image
-//	size: number of pixels in image (rows*cols)
-/*********************************************************************/
 
 void GUIClient::sendImage(uint8_t rows,uint8_t cols,uint16_t *pixels, uint16_t size)
 {
@@ -193,19 +172,7 @@ void GUIClient::sendImage(uint8_t rows,uint8_t cols,uint16_t *pixels, uint16_t s
 
 }
 
-/*********************************************************************/
-//	sendImage (char version)
-//	sends an image to the GUI for display
-//
-//	ARGUMENTS:
-//	rows: number of rows in image
-//	cols: number of cols in image
-//	pixels: a 1D array of char pixel values in the image
-//	size: number of pixels in image (rows*cols)
-/*********************************************************************/
-
-void GUIClient::sendImage(uint8_t rows,uint8_t cols,char *pixels,
-        uint16_t size)
+void GUIClient::sendImage(uint8_t rows,uint8_t cols,uint8_t *pixels, uint16_t size)
 {
 
     if(detected)	//if GUI is detected, send uint8_ts
@@ -227,23 +194,6 @@ void GUIClient::sendImage(uint8_t rows,uint8_t cols,char *pixels,
         sendEscChar(STOP);		//send stop packet
     }
 }
-
-/*********************************************************************/
-//	sendVectors (uint16_t version)
-//	sends an image to the GUI for display
-//
-//	ARGUMENTS:
-//	rows: number of rows in vector display (NOT IMAGE)
-//	cols: number of cols in vector display (NOT IMAGE)
-//	vector: an array of vectors in [X1,Y1,X2,Y2,...] format
-//	num_vectors: number of vectors (size of vector/2)
-//
-//	EXAMPLES:
-//	uint16_t vector[4]={vx1,vy1,vx2,vy2}
-//	sendVectors(1,2,vector,2)
-//	displays a 1x2 array of two vectors in the display windows
-//	which means vx will display on the left and vy on the right
-/*********************************************************************/
 
 void GUIClient::sendVectors(uint8_t rows,uint8_t cols,uint16_t *vector,uint16_t num_vectors)
 { 
@@ -276,23 +226,6 @@ void GUIClient::sendVectors(uint8_t rows,uint8_t cols,uint16_t *vector,uint16_t 
     }
 }
 
-/*********************************************************************/
-//	sendVectors (char version)
-//	sends an image to the GUI for display
-//
-//	ARGUMENTS:
-//	rows: number of rows in vector display (NOT IMAGE)
-//	cols: number of cols in vector display (NOT IMAGE)
-//	vector: an array of vectors in [X1,Y1,X2,Y2,...] format
-//	num_vectors: number of vectors (size of vector/2)
-//
-//	EXAMPLES:
-//	char vector[4]={vx1,vy1,vx2,vy2}
-//	sendVectors(1,2,vector,2)
-//	displays a 1x2 array of two vectors in the display windows
-//	which means vx will display on the left and vy on the right
-/*********************************************************************/
-
 void GUIClient::sendVectors(uint8_t rows,uint8_t cols, int8_t *vector, uint16_t num_vectors)
 { 
 
@@ -313,22 +246,6 @@ void GUIClient::sendVectors(uint8_t rows,uint8_t cols, int8_t *vector, uint16_t 
         sendEscChar(STOP);			//send stop packet
     }
 }
-
-/*********************************************************************/
-//	sendPoints 
-//	sends an array of points to highlight in the GUI display
-//
-//	ARGUMENTS:
-//	rows: number of rows in image
-//	cols: number of cols in image
-//	points: an array of points in [r1,c1,r2,c2,...] format
-//	num_vectors: number of points (size of points/2)
-//
-//	EXAMPLES:
-//	char points[4]={2,4,10,11}
-//	sendpoints(16,16,points,2)
-//	on a 16x16 array, highlights the points (2,4) and (10,11)
-/*********************************************************************/
 
 void GUIClient::sendPoints(uint8_t rows, uint8_t cols, uint8_t *points, uint16_t num_points)
 { 
