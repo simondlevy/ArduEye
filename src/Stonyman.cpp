@@ -257,19 +257,19 @@ void Stonyman::calcMask(uint16_t *img, uint16_t size, uint8_t *mask,uint16_t *ma
 {
     *maskBase = 10000; // e.g. "high"
 
-    for (int i=0; i<size; ++i)
+    for (uint16_t i=0; i<size; ++i)
         if (img[i]<(*maskBase))	//find the min value for maskBase
             *maskBase = img[i];
 
     // generate calibration mask
-    for (int i=0; i<size; ++i)
+    for (uint16_t i=0; i<size; ++i)
         mask[i] = img[i] - *maskBase;	//subtract min value for mask
 }
 
 void Stonyman::applyMask(uint16_t *img, uint16_t size, uint8_t *mask, uint16_t maskBase)
 {
     // Subtract calibration mask
-    for (int i=0; i<size;++i) 
+    for (uint16_t i=0; i<size;++i) 
     {
         img[i] -= maskBase+mask[i];  //subtract FPN mask
         img[i]=-img[i];          //negate image so it displays properly
@@ -315,20 +315,18 @@ void Stonyman::get_image(
     (void)use_digital;
 
     uint16_t *pimg = img; // pointer to output image array
-    uint16_t val;
-    uint8_t row,col;
 
     // Go to first row
     set_pointer_value(SMH_SYS_ROWSEL,rowstart);
 
     // Loop through all rows
-    for (row=0; row<numrows; ++row) {
+    for (uint8_t row=0; row<numrows; ++row) {
 
         // Go to first column
         set_pointer_value(SMH_SYS_COLSEL,colstart);
 
         // Loop through all columns
-        for (col=0; col<numcols; ++col) {
+        for (uint8_t col=0; col<numcols; ++col) {
 
             // settling delay
             delayMicroseconds(1);
@@ -340,7 +338,7 @@ void Stonyman::get_image(
             // get data value
             delayMicroseconds(1);
 
-            val = analogRead(input); // acquire pixel XXX need to support digital (SPI) as well
+            uint16_t val = analogRead(input); // acquire pixel XXX need to support digital (SPI) as well
 
             *pimg = val; // store pixel
             pimg++; // advance pointer
@@ -391,14 +389,13 @@ void Stonyman::get_image_row_sum(
     (void)use_digital;
 
     uint16_t *pimg = img; // pointer to output image array
-    uint16_t val,total=0;
-    uint8_t row,col;
+    uint16_t total=0;
 
     // Go to first row
     set_pointer_value(SMH_SYS_ROWSEL,rowstart);
 
     // Loop through all rows
-    for (row=0; row<numrows; ++row) {
+    for (uint8_t row=0; row<numrows; ++row) {
 
         // Go to first column
         set_pointer_value(SMH_SYS_COLSEL,colstart);
@@ -406,7 +403,7 @@ void Stonyman::get_image_row_sum(
         total=0;
 
         // Loop through all columns
-        for (col=0; col<numcols; ++col) {
+        for (uint8_t col=0; col<numcols; ++col) {
 
             // settling delay
             delayMicroseconds(1);
@@ -418,7 +415,7 @@ void Stonyman::get_image_row_sum(
             // get data value
             delayMicroseconds(1);
 
-            val = analogRead(input); // acquire pixel
+            uint16_t val = analogRead(input); // acquire pixel
 
             total+=val;	//sum values along row
             inc_value(colskip); // go to next column
@@ -472,14 +469,13 @@ void Stonyman::get_image_col_sum(
     (void)use_digital;
 
     uint16_t *pimg = img; // pointer to output image array
-    uint16_t val,total=0;
-    uint8_t row,col;
+    uint16_t total=0;
 
     // Go to first col
     set_pointer_value(SMH_SYS_COLSEL,colstart);
 
     // Loop through all cols
-    for (col=0; col<numcols; ++col) {
+    for (uint8_t col=0; col<numcols; ++col) {
 
         // Go to first row
         set_pointer_value(SMH_SYS_ROWSEL,rowstart);
@@ -487,7 +483,7 @@ void Stonyman::get_image_col_sum(
         total=0;
 
         // Loop through all rows
-        for (row=0; row<numrows; ++row) {
+        for (uint8_t row=0; row<numrows; ++row) {
 
             // settling delay
             delayMicroseconds(1);
@@ -499,7 +495,7 @@ void Stonyman::get_image_col_sum(
             // get data value
             delayMicroseconds(1);
 
-            val = analogRead(input); // acquire pixel
+            uint16_t val = analogRead(input); // acquire pixel
 
             total+=val;	//sum value along column
             inc_value(rowskip); // go to next row
@@ -557,19 +553,19 @@ void Stonyman::find_max(
     (void)use_digital;
 
     uint16_t maxval=5000,minval=0,val;
-    uint8_t row,col,bestrow=0,bestcol=0;
+    uint8_t bestrow=0,bestcol=0;
 
     // Go to first row
     set_pointer_value(SMH_SYS_ROWSEL,rowstart);
 
     // Loop through all rows
-    for (row=0; row<numrows; ++row) {
+    for (uint8_t row=0; row<numrows; ++row) {
 
         // Go to first column
         set_pointer_value(SMH_SYS_COLSEL,colstart);
 
         // Loop through all columns
-        for (col=0; col<numcols; ++col) {
+        for (uint8_t col=0; col<numcols; ++col) {
 
             // settling delay
             delayMicroseconds(1);
@@ -626,14 +622,11 @@ void Stonyman::chip_to_matlab(uint8_t input, bool use_digital)
 {
     (void)use_digital;
 
-    uint8_t row,col;
-    uint16_t val;
-
     Serial.println("Img = [");
     set_pointer_value(SMH_SYS_ROWSEL,0); // set row = 0
-    for (row=0; row<112; ++row) {
+    for (uint8_t row=0; row<112; ++row) {
         set_pointer_value(SMH_SYS_COLSEL,0); // set column = 0
-        for (col=0; col<112; ++col) {
+        for (uint8_t col=0; col<112; ++col) {
             // settling delay
             delayMicroseconds(1);
             // pulse amplifier if needed
@@ -643,7 +636,7 @@ void Stonyman::chip_to_matlab(uint8_t input, bool use_digital)
             // get data value
             delayMicroseconds(1);
 
-            val = analogRead(input); // acquire pixel
+            uint16_t val = analogRead(input); // acquire pixel
 
             // increment column
             inc_value(1);
@@ -693,17 +686,14 @@ void Stonyman::section_to_matlab(
 {
     (void)use_digital;
 
-    uint16_t val;
-    uint8_t row,col;
-
     Serial.println("Img = [");
     set_pointer_value(SMH_SYS_ROWSEL,rowstart);
 
-    for (row=0; row<numrows; row++) {
+    for (uint8_t row=0; row<numrows; row++) {
 
         set_pointer_value(SMH_SYS_COLSEL,colstart);
 
-        for (col=0; col<numcols; col++) {
+        for (uint8_t col=0; col<numcols; col++) {
             // settling delay
             delayMicroseconds(1);
 
@@ -713,7 +703,7 @@ void Stonyman::section_to_matlab(
 
             delayMicroseconds(1);
 
-            val = analogRead(input); // acquire pixel
+            uint16_t val = analogRead(input); // acquire pixel
 
             inc_value(colskip);
             Serial.print(val);
