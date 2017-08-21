@@ -81,22 +81,22 @@ class FrameGrabber {
     /**
      * Does something useful before frame is read.
      */
-    virtual void preProcess(void) = 0;
+    virtual void preProcess(void) { }
 
     /**
      * Does something useful with the pixel just read.
      */
-    virtual void handlePixel(uint16_t pixel) = 0;
+    virtual void handlePixel(uint16_t pixel) { (void)pixel; }
 
     /**
      * Does something useful at the end of a row.
      */
-    virtual void handleRowEnd(void) = 0;
+    virtual void handleRowEnd(void) { }
 
     /**
      * Does something useful after frame is read.
      */
-    virtual void postProcess(void) = 0;
+    virtual void postProcess(void) { }
 };
 
 /**

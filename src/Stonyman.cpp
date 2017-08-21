@@ -414,14 +414,6 @@ class ArrayFrameGrabber : protected FrameGrabber {
     {
         *_pimg++ = pixel;
     }
-
-    virtual void handleRowEnd(void) override 
-    {
-    }
-
-    virtual void postProcess(void) override 
-    {
-    }
 };
 
 void Stonyman::get_image(
