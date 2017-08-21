@@ -290,7 +290,7 @@ void Stonyman::getImageAnalog(uint16_t *img,
         uint8_t colstride, 
         uint8_t input) 
 {
-    get_image(img, rowstart, numrows, rowstride, colstart, numcols, colstride, input, true);
+    get_image(img, rowstart, numrows, rowstride, colstart, numcols, colstride, input, false);
 }
 
 void Stonyman::getImageDigital(uint16_t *img, 
@@ -386,12 +386,60 @@ void Stonyman::findMaxDigital(
 }
 
 /*********************************************************************/
-// private methods
+// private stuff
 
-void Stonyman::chip_to_matlab(uint8_t input, bool use_digital) 
+//helper class for grabbing images and storing them in an array
+class ArrayFrameGrabber : protected FrameGrabber {
+
+    friend class Stonyman;
+
+    private:
+
+    uint16_t * _img;
+    uint16_t * _pimg;
+
+    protected:
+
+    ArrayFrameGrabber(uint16_t * img) 
+    {
+        _img = img;
+    }
+
+    virtual void preProcess(void) override  
+    {
+        _pimg = _img;
+    }
+
+    virtual void handlePixel(uint16_t pixel) override 
+    {
+        *_pimg++ = pixel;
+    }
+
+    virtual void handleRowEnd(void) override 
+    {
+    }
+
+    virtual void postProcess(void) override 
+    {
+    }
+};
+
+void Stonyman::get_image(
+        uint16_t * img,
+        uint8_t rowstart, 
+        uint8_t numrows, 
+        uint8_t rowstride, 
+        uint8_t colstart, 
+        uint8_t numcols, 
+        uint8_t colstride, 
+        uint8_t input,
+        bool use_analog)
 {
-    section_to_matlab(0, 112, 1, 0, 112, 1, input, use_digital);
+    ImageBounds bds(rowstart, numrows, rowstride, colstart, numcols, colstride);
+    ArrayFrameGrabber fg(img);
+    process_frame(fg, bds, input, use_analog);
 }
+
 
 void Stonyman::process_frame(FrameGrabber & grabber, ImageBounds & bounds, uint8_t input, bool use_digital)
 {
@@ -432,108 +480,6 @@ void Stonyman::process_frame(FrameGrabber & grabber, ImageBounds & bounds, uint8
     grabber.postProcess();
 }
 
-void Stonyman::section_to_matlab(
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colstride, 
-        uint8_t input,
-        bool use_digital) 
-{
-    (void)use_digital;
-
-    // grabber.preProcess()
-    Serial.println("Img = [");
-
-    set_pointer_value(SMH_SYS_ROWSEL,rowstart);
-
-    for (uint8_t row=0; row<numrows; row++) {
-
-        set_pointer_value(SMH_SYS_COLSEL,colstart);
-
-        for (uint8_t col=0; col<numcols; col++) {
-
-            // settling delay
-            delayMicroseconds(1);
-
-            // pulse amplifier if needed
-            if (use_amp) 
-                pulse_inphi(2);
-
-            delayMicroseconds(1);
-
-            uint16_t val = analogRead(input); // acquire pixel
-
-            inc_value(colstride);
-
-            // grabber.handlePixel()
-            Serial.print(val);
-            Serial.print(" ");
-        }
-
-        set_pointer(SMH_SYS_ROWSEL);
-        inc_value(rowstride); // go to next row
-
-        // grabber.handleRowEnd()
-        Serial.println(" ");
-    }
-
-    // grabber.postProcess()
-    Serial.println("];");
-
-}
-
-void Stonyman::get_image(
-        uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colstride, 
-        uint8_t input, 
-        bool    use_digital) 
-{
-    // XXX need to support digital (SPI) as well    
-    (void)use_digital;
-
-    uint16_t *pimg = img; // pointer to output image array
-
-    // Go to first row
-    set_pointer_value(SMH_SYS_ROWSEL,rowstart);
-
-    // Loop through all rows
-    for (uint8_t row=0; row<numrows; ++row) {
-
-        // Go to first column
-        set_pointer_value(SMH_SYS_COLSEL,colstart);
-
-        // Loop through all columns
-        for (uint8_t col=0; col<numcols; ++col) {
-
-            // settling delay
-            delayMicroseconds(1);
-
-            // pulse amplifier if needed
-            if (use_amp) 
-                pulse_inphi(2);
-
-            // get data value
-            delayMicroseconds(1);
-
-            uint16_t val = analogRead(input); // acquire pixel XXX need to support digital (SPI) as well
-
-            inc_value(colstride); // go to next column
-
-            *pimg++ = val; // store pixel
-        }
-
-        set_pointer(SMH_SYS_ROWSEL);
-        inc_value(rowstride); // go to next row
-    }
-}
 
 void Stonyman::get_image_col_sum(
         uint16_t *img, 

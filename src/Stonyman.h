@@ -535,18 +535,6 @@ class Stonyman
                 uint8_t *maxcol,
                 bool use_digital);
 
-        void chip_to_matlab(uint8_t input, bool use_digital);
-
-        void section_to_matlab(
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowstride, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colstride, 
-                uint8_t input, 
-                bool use_digital);
-
         static void init_pin(uint8_t pin);
 
         /*********************************************************************/
