@@ -393,7 +393,7 @@ void Stonyman::chip_to_matlab(uint8_t input, bool use_digital)
     section_to_matlab(0, 112, 1, 0, 112, 1, input, use_digital);
 }
 
-void Stonyman::processFrame(FrameGrabber & grabber, ImageBounds & bounds, uint8_t input, bool use_digital)
+void Stonyman::process_frame(FrameGrabber & grabber, ImageBounds & bounds, uint8_t input, bool use_digital)
 {
     (void)use_digital;
 

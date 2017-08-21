@@ -32,10 +32,6 @@ getImageColSumAnalog		KEYWORD2
 getImageColSumDigital		KEYWORD2
 findMaxAnalog			KEYWORD2
 findMaxDigital			KEYWORD2
-chipToMatalbAnalog		KEYWORD2
-chipToMatlabDigital		KEYWORD2
-sectionToMatlabAnalog		KEYWORD2
-sectionToMatalbDigital		KEYWORD2
 
 # GUIClient
 start				KEYWORD2

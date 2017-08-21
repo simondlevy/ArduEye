@@ -117,10 +117,23 @@ class ImageBounds {
 
     public:
 
+    /**
+      * Constructs an ImageBounds object of a specified size for use with Stonyman::processFrame()
+      *
+      * @param rowstart index of first row
+      * @param numrows number of rows
+      * @param rowstride stride (step size) for row
+      * @param colstart index of first column
+      * @param numcols number of columns
+      * @param colstride stride (step size) for column
+      */
     ImageBounds(uint8_t rowstart, uint8_t numrows, uint8_t rowstride, uint8_t colstart, uint8_t numcols, uint8_t colstride) :
         _rowstart(rowstart), _numrows(numrows), _rowstride(rowstride), _colstart(colstart), _numcols(numcols), _colstride(colstride) { }
 
-    ImageBounds(void) : _rowstart(0), _numrows(112), _rowstride(1), _colstart(0), _numcols(112), _colstride(1) { }
+    /**
+      * Constructs a full-sized (112x112) ImageBounds object for use with Stonyman::processFrame()
+      */
+     ImageBounds(void) : _rowstart(0), _numrows(112), _rowstride(1), _colstart(0), _numcols(112), _colstride(1) { }
 };
 
 /**
@@ -443,7 +456,25 @@ class Stonyman
                 uint8_t *maxrow, 
                 uint8_t *maxcol);
 
-         void processFrame(FrameGrabber & grabber, ImageBounds & bounds, uint8_t input, bool use_digital);
+         /**
+           * Processes one frame of image data from Stonyman2 using analog-to-digital (ADC) 
+           * converter on the Arduino.
+           *
+           * @param fg FrameGrabber object
+           * @param bounds ImageBounds object
+           * @param input input pin number
+           */
+         void processFrameAnalog(FrameGrabber & fg, ImageBounds & bounds, uint8_t input) { process_frame(fg, bounds, input, false); }
+
+         /**
+           * Processes one frame of image data from Stonyman2 using analog-to-digital (ADC) 
+           * converter on the Stonyman2 (SPI bus).
+           *
+           * @param fg FrameGrabber object
+           * @param bounds ImageBounds object
+           * @param input input pin number
+           */
+          void processFrameDigital(FrameGrabber & fg, ImageBounds & bounds, uint8_t input) { process_frame(fg, bounds, input, true); }
 
     private:
 
@@ -456,6 +487,8 @@ class Stonyman
         uint8_t _resv;
         uint8_t _incv;
         uint8_t _inphi;
+
+        void process_frame(FrameGrabber & grabber, ImageBounds & bounds, uint8_t input, bool use_digital);
 
         void get_image(
                 uint16_t *img, 

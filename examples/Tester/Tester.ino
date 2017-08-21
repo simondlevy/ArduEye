@@ -265,7 +265,7 @@ static void processCommands()
             case 'm':
                 {
                     ImageBounds bds(sr,row,skiprow,sc,col,skipcol);
-                    stonyman.processFrame(fg, bds, input, false);
+                    stonyman.processFrameAnalog(fg, bds, input);
                 }
                 break;
 
@@ -273,7 +273,7 @@ static void processCommands()
             case 'M':  
                 {
                     ImageBounds bds;
-                    stonyman.processFrame(fg, bds, input, false);
+                    stonyman.processFrameAnalog(fg, bds, input);
                 }
                 break;
 
