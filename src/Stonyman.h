@@ -110,17 +110,17 @@ class ImageBounds {
 
     uint8_t _rowstart; 
     uint8_t _numrows; 
-    uint8_t _rowskip; 
+    uint8_t _rowstride; 
     uint8_t _colstart; 
     uint8_t _numcols; 
-    uint8_t _colskip;
+    uint8_t _colstride;
 
     public:
 
-    ImageBounds(uint8_t rowstart, uint8_t numrows, uint8_t rowskip, uint8_t colstart, uint8_t numcols, uint8_t colskip) :
-        _rowstart(rowstart), _numrows(numrows), _rowskip(rowskip), _colstart(colstart), _numcols(numcols), _colskip(colskip) { }
+    ImageBounds(uint8_t rowstart, uint8_t numrows, uint8_t rowstride, uint8_t colstart, uint8_t numcols, uint8_t colstride) :
+        _rowstart(rowstart), _numrows(numrows), _rowstride(rowstride), _colstart(colstart), _numcols(numcols), _colstride(colstride) { }
 
-    ImageBounds(void) : _rowstart(0), _numrows(112), _rowskip(1), _colstart(0), _numcols(112), _colskip(0) { }
+    ImageBounds(void) : _rowstart(0), _numrows(112), _rowstride(1), _colstart(0), _numcols(112), _colstride(1) { }
 };
 
 /**
@@ -256,10 +256,10 @@ class Stonyman
          * @param img (output) pointer to image array, an array of signed uint16_ts
          * @param rowstart first row to acquire
          * @param numrows number of rows to acquire
-         * @param rowskip skipping between rows (useful if binning is used)
+         * @param rowstride strideping between rows (useful if binning is used)
          * @param colstart first column to acquire
          * @param numcols number of columns to acquire
-         * @param colskip skipping between columns
+         * @param colstride strideping between columns
          * @param input which analog input pin to use
          * 
          * Examples:
@@ -275,10 +275,10 @@ class Stonyman
                 uint16_t *img, 
                 uint8_t rowstart, 
                 uint8_t numrows, 
-                uint8_t rowskip, 
+                uint8_t rowstride, 
                 uint8_t colstart, 
                 uint8_t numcols, 
-                uint8_t colskip, 
+                uint8_t colstride, 
                 uint8_t input);
 
         /**
@@ -289,10 +289,10 @@ class Stonyman
                 uint16_t *img, 
                 uint8_t rowstart, 
                 uint8_t numrows, 
-                uint8_t rowskip, 
+                uint8_t rowstride, 
                 uint8_t colstart, 
                 uint8_t numcols, 
-                uint8_t colskip, 
+                uint8_t colstride, 
                 uint8_t input);
 
         /**
@@ -306,10 +306,10 @@ class Stonyman
          * @param img (output): pointer to image array, an array of signed uint16_ts
          * @param rowstart: first row to acquire
          * @param numrows: number of rows to acquire
-         * @param rowskip: skipping between rows (useful if binning is used)
+         * @param rowstride: strideping between rows (useful if binning is used)
          * @param colstart: first column to acquire
          * @param numcols: number of columns to acquire
-         * @param colskip: skipping between columns
+         * @param colstride: strideping between columns
          * @param input which analog input pin to use
          *
          * Examples:
@@ -325,10 +325,10 @@ class Stonyman
                 uint16_t *img, 
                 uint8_t rowstart, 
                 uint8_t numrows, 
-                uint8_t rowskip, 
+                uint8_t rowstride, 
                 uint8_t colstart, 
                 uint8_t numcols, 
-                uint8_t colskip, 
+                uint8_t colstride, 
                 uint8_t input);
 
         /**
@@ -339,10 +339,10 @@ class Stonyman
                 uint16_t *img, 
                 uint8_t rowstart, 
                 uint8_t numrows, 
-                uint8_t rowskip, 
+                uint8_t rowstride, 
                 uint8_t colstart, 
                 uint8_t numcols, 
-                uint8_t colskip, 
+                uint8_t colstride, 
                 uint8_t input);
 
         /**
@@ -356,10 +356,10 @@ class Stonyman
          * @param img (output) pointer to image array, an array of signed uint16_ts
          * @param rowstart first row to acquire
          * @param numrows number of rows to acquire
-         * @param rowskip skipping between rows (useful if binning is used)
+         * @param rowstride strideping between rows (useful if binning is used)
          * @param colstart first column to acquire
          * @param numcols number of columns to acquire
-         * @param colskip skipping between columns
+         * @param colstride strideping between columns
          * @param input which analog input pin to use
          * 
          * Examples:
@@ -375,10 +375,10 @@ class Stonyman
                 uint16_t *img, 
                 uint8_t rowstart, 
                 uint8_t numrows, 
-                uint8_t rowskip, 
+                uint8_t rowstride, 
                 uint8_t colstart, 
                 uint8_t numcols, 
-                uint8_t colskip, 
+                uint8_t colstride, 
                 uint8_t input);
 
         /**
@@ -389,10 +389,10 @@ class Stonyman
                 uint16_t *img, 
                 uint8_t rowstart, 
                 uint8_t numrows, 
-                uint8_t rowskip, 
+                uint8_t rowstride, 
                 uint8_t colstart, 
                 uint8_t numcols, 
-                uint8_t colskip, 
+                uint8_t colstride, 
                 uint8_t input);
 
         /**
@@ -403,10 +403,10 @@ class Stonyman
          *
          * @param rowstart first row to search
          * @param numrows number of rows to search
-         * @param rowskip skipping between rows (useful if binning is used)
+         * @param rowstride strideping between rows (useful if binning is used)
          * @param colstart first column to search
          * @param numcols number of columns to search
-         * @param colskip skipping between columns
+         * @param colstride strideping between columns
          * @param input which analog input to use
          * @param maxrow (output) pointer to variable to write row of brightest pixel
          * @param maxcol (output) pointer to variable to write column of brightest pixel
@@ -420,10 +420,10 @@ class Stonyman
         void findMaxAnalog(
                 uint8_t rowstart, 
                 uint8_t numrows, 
-                uint8_t rowskip, 
+                uint8_t rowstride, 
                 uint8_t colstart, 
                 uint8_t numcols, 
-                uint8_t colskip, 
+                uint8_t colstride, 
                 uint8_t input,
                 uint8_t *maxrow, 
                 uint8_t *maxcol);
@@ -435,73 +435,13 @@ class Stonyman
          void findMaxDigital(
                 uint8_t rowstart, 
                 uint8_t numrows, 
-                uint8_t rowskip, 
+                uint8_t rowstride, 
                 uint8_t colstart, 
                 uint8_t numcols, 
-                uint8_t colskip, 
+                uint8_t colstride, 
                 uint8_t input,
                 uint8_t *maxrow, 
                 uint8_t *maxcol);
-
-        /**
-         * Dumps the entire contents of a Stonyman or 
-         * Hawksbill chip to the Serial monitor in a form that may be copied 
-         * into Matlab. The image is written be stored in matrix Img. 
-         *
-         * @param input which analog input pin to use
-         */
-        void chipToMatlabAnalog(uint8_t input);
-
-        /**
-          * Digital (SPI) version of above.
-          * @param input pin for chip-select signal
-          */ 
-        void chipToMatlabDigital(uint8_t input);
-
-        /**
-         * Dumps a box section of a Stonyman or Hawksbill 
-         * to the Serial monitor in a form that may be copied into Matlab. 
-         * The image is written to be stored in matrix Img. 
-         *
-         * @param rowstart first row to acquire
-         * @param numrows number of rows to acquire
-         * @param rowskip skipping between rows (useful if binning is used)
-         * @param colstart first column to acquire
-         * @param numcols number of columns to acquire
-         * @param colskip skipping between columns
-         * @param input which analog input pin to use
-         *
-         * Examples:
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;sectionToMatlab(16,8,1,24,8,1,0): 
-         * Grab an 8x8 window of pixels at raw resolution starting at row 
-         * 16, column 24, from onboard ADC at chip 0
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;sectionToMatlab(0,14,8,0,14,8,2): 
-         * Grab entire Stonyman chip when using 8x8 binning. Grab from input 
-         * 2.
-         */
-        void sectionToMatlabAnalog(
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowskip, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colskip, 
-                uint8_t input);   
-
-        /**
-          * Digital (SPI) version of above.
-          * @param input pin for chip-select signal
-          */ 
-         void sectionToMatlabDigital(
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowskip, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colskip, 
-                uint8_t input);   
 
          void processFrame(FrameGrabber & grabber, ImageBounds & bounds, uint8_t input, bool use_digital);
 
@@ -521,10 +461,10 @@ class Stonyman
                 uint16_t *img, 
                 uint8_t rowstart, 
                 uint8_t numrows, 
-                uint8_t rowskip, 
+                uint8_t rowstride, 
                 uint8_t colstart, 
                 uint8_t numcols, 
-                uint8_t colskip, 
+                uint8_t colstride, 
                 uint8_t input,
                 bool use_digital);
 
@@ -532,10 +472,10 @@ class Stonyman
                 uint16_t *img, 
                 uint8_t rowstart, 
                 uint8_t numrows, 
-                uint8_t rowskip, 
+                uint8_t rowstride, 
                 uint8_t colstart, 
                 uint8_t numcols, 
-                uint8_t colskip, 
+                uint8_t colstride, 
                 uint8_t input, 
                 bool use_digital);
 
@@ -543,20 +483,20 @@ class Stonyman
                 uint16_t *img, 
                 uint8_t rowstart, 
                 uint8_t numrows, 
-                uint8_t rowskip, 
+                uint8_t rowstride, 
                 uint8_t colstart, 
                 uint8_t numcols, 
-                uint8_t colskip, 
+                uint8_t colstride, 
                 uint8_t input, 
                 bool use_digital);
 
         void find_max(
                 uint8_t rowstart, 
                 uint8_t numrows, 
-                uint8_t rowskip, 
+                uint8_t rowstride, 
                 uint8_t colstart, 
                 uint8_t numcols, 
-                uint8_t colskip, 
+                uint8_t colstride, 
                 uint8_t input,
                 uint8_t *maxrow, 
                 uint8_t *maxcol,
@@ -567,10 +507,10 @@ class Stonyman
         void section_to_matlab(
                 uint8_t rowstart, 
                 uint8_t numrows, 
-                uint8_t rowskip, 
+                uint8_t rowstride, 
                 uint8_t colstart, 
                 uint8_t numcols, 
-                uint8_t colskip, 
+                uint8_t colstride, 
                 uint8_t input, 
                 bool use_digital);
 
