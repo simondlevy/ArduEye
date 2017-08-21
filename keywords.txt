@@ -61,12 +61,12 @@ imgSubwin2Dto1DHorizontal	KEYWORD2
 imgSubwin2Dto1DVertical		KEYWORD2
 
 # OpticalFlow
-LPF				KEYWORD2
-IIA_1D				KEYWORD2
-IIA_Plus_2D			KEYWORD2
-LK_Plus_2D			KEYWORD2
-IIA_Square_2D			KEYWORD2
-LK_Square_2D			KEYWORD2
+ofoLPF				KEYWORD2
+ofoIIA_1D			KEYWORD2
+ofoIIA_Plus_2D			KEYWORD2
+ofoLK_Plus_2D			KEYWORD2
+ofoIIA_Square_2D		KEYWORD2
+ofoLK_Square_2D			KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

@@ -223,22 +223,22 @@ void loop()
 
     //Image Interpolation 2D with standard "plus" shifting
     if(OFType==0)
-        IIA_Plus_2D(current_img,last_img,row,col,200,&OFX,&OFY);
+        ofoIIA_Plus_2D(current_img,last_img,row,col,200,&OFX,&OFY);
     //Image Interpolation 2D with compact "square" shifting
     if(OFType==1)
-        IIA_Square_2D(current_img,last_img,row,col,200,&OFX,&OFY);
+        ofoIIA_Square_2D(current_img,last_img,row,col,200,&OFX,&OFY);
     //Lucas Kanade 2D with standard "plus" shifting
     if(OFType==2)
-        LK_Plus_2D(current_img,last_img,row,col,200,&OFX,&OFY);
+        ofoLK_Plus_2D(current_img,last_img,row,col,200,&OFX,&OFY);
     //Lucas Kanade 2D with compact "square" shifting
     if(OFType==3)
-        LK_Square_2D(current_img,last_img,row,col,200,&OFX,&OFY);
+        ofoLK_Square_2D(current_img,last_img,row,col,200,&OFX,&OFY);
 
     //low pass filter the X shift
-    LPF(&filtered_OFX,&OFX,0.35);
+    ofoLPF(&filtered_OFX,&OFX,0.35);
 
     //low pass filter the Y shift
-    LPF(&filtered_OFY,&OFY,0.35);
+    ofoLPF(&filtered_OFY,&OFY,0.35);
 
     //put filtered shifts into array to send to GUI
     vectors[0]=filtered_OFX;    //vector1 x

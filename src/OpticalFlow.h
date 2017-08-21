@@ -41,7 +41,7 @@
  *  @param new_OF new filtered_OF filtered optical-flow value
  *  @alpha filter parameter (between 0 and 1)
  */
-void LPF(int16_t *filtered_OF, int16_t *new_OF, float alpha);
+void ofoLPF(int16_t *filtered_OF, int16_t *new_OF, float alpha);
 
 /**
  *	Adds new optical flow value to accumulation sum iff only new value 
@@ -51,7 +51,7 @@ void LPF(int16_t *filtered_OF, int16_t *new_OF, float alpha);
  *  @param threshold threshold value
  *  @return true if value was added, false otherwise
  */      
-bool Accumulate(int16_t new_OF, int16_t *acc_OF, int16_t threshold);
+bool ofoAccumulate(int16_t new_OF, int16_t *acc_OF, int16_t threshold);
 
 /**
  *	Runs a one-dimensional version of the image interpolation algorithm (IIA) described in
@@ -77,12 +77,12 @@ bool Accumulate(int16_t new_OF, int16_t *acc_OF, int16_t threshold);
  *	@param scale value of one pixel of motion (for scaling output)
  *	@param out pointer to integer value for output.
  */
-void IIA_1D(uint8_t *curr_img, uint8_t *last_img, uint8_t numpix, uint16_t scale, int16_t *out);
+void ofoIIA_1D(uint8_t *curr_img, uint8_t *last_img, uint8_t numpix, uint16_t scale, int16_t *out);
 
 /**
  * Sixteen-bit version of above
  */
-void IIA_1D(uint16_t *curr_img, uint16_t *last_img, uint8_t numpix, uint16_t scale, int16_t *out);
+void ofoIIA_1D(uint16_t *curr_img, uint16_t *last_img, uint8_t numpix, uint16_t scale, int16_t *out);
 
 /**
  *  Runs a two-dimensional version of the Srinivasan algorithm, using a plus-shaped configuration of pixels
@@ -96,22 +96,22 @@ void IIA_1D(uint16_t *curr_img, uint16_t *last_img, uint8_t numpix, uint16_t sca
  *	@param ofy pointer to integer value for Y shift.
  */
 
-void IIA_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
+void ofoIIA_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
 
 /**
  * Sixteen-bit version of above.
  */
-void IIA_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
+void ofoIIA_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
 
 /**
  * Same as above, using square configuration
  */
-void IIA_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
+void ofoIIA_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
 
 /**
  * Sixteen-bit version of above.
  */
-void IIA_Square_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
+void ofoIIA_Square_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
 
 /**
  *	Computes optical flow in plus configuration between two images using the algorithm desribed in
@@ -142,19 +142,19 @@ void IIA_Square_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uint16
  *	@param ofx pointer to integer value for X shift.
  *	@param ofy pointer to integer value for Y shift.
  */
-void LK_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy);
+void ofoLK_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy);
 
 /**
  *	Sixteen-bit version of above.
  */
-void LK_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
+void ofoLK_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
 
 /**
  * Same as above, using square pixel configuration
  */
-void LK_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
+void ofoLK_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
 
 /**
  * Sixteen-bit version of above
  */
-void LK_Square_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
+void ofoLK_Square_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);

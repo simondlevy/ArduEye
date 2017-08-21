@@ -33,12 +33,12 @@ policies, either expressed or implied, of Centeye, Inc.
 #include <OpticalFlow.h>
 #include <stdint.h>
 
-void LPF(int16_t *filtered_OF, int16_t *new_OF, float alpha)
+void ofoLPF(int16_t *filtered_OF, int16_t *new_OF, float alpha)
 {
     (*filtered_OF)=(*filtered_OF)+((float)(*new_OF)-(*filtered_OF))	*alpha;
 }
 
-bool Accumulate(int16_t new_OF, int16_t *acc_OF, uint16_t threshold)
+bool ofoAccumulate(int16_t new_OF, int16_t *acc_OF, uint16_t threshold)
 {
     bool reset = false;
 
@@ -52,7 +52,7 @@ bool Accumulate(int16_t new_OF, int16_t *acc_OF, uint16_t threshold)
 }
 
 
-void IIA_1D(uint16_t *curr_img, uint16_t *last_img, uint8_t numpix, uint16_t scale, uint16_t *out) 
+void ofoIIA_1D(uint16_t *curr_img, uint16_t *last_img, uint8_t numpix, uint16_t scale, uint16_t *out) 
 {
     // Set up pointers
     uint16_t * pleft = curr_img;	//left-shifted image
@@ -84,7 +84,7 @@ void IIA_1D(uint16_t *curr_img, uint16_t *last_img, uint8_t numpix, uint16_t sca
     *out = 2*top*scale/bottom;
 }
 
-void IIA_1D(uint8_t *curr_img, uint8_t *last_img, uint8_t 	numpix, uint16_t scale, uint16_t *out) 
+void ofoIIA_1D(uint8_t *curr_img, uint8_t *last_img, uint8_t 	numpix, uint16_t scale, uint16_t *out) 
 {
     // Set up pointers
     uint8_t * pleft = curr_img;	//left-shifted image
@@ -116,7 +116,7 @@ void IIA_1D(uint8_t *curr_img, uint8_t *last_img, uint8_t 	numpix, uint16_t scal
 }
 
 
-void IIA_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
+void ofoIIA_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
 {
     int32_t  A=0, BD=0, C=0, E=0, F=0;
 
@@ -169,7 +169,7 @@ void IIA_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t co
 }
 
 
-void IIA_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
+void ofoIIA_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
 {
     int32_t  A=0, BD=0, C=0, E=0, F=0;
 
@@ -220,7 +220,7 @@ void IIA_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows,uint16_t 
     (*ofy) = (int16_t)YS;
 }
 
-void IIA_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
+void ofoIIA_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
 {
     int32_t  A=0, BD=0, C=0, E=0, F=0;
 
@@ -278,7 +278,7 @@ void IIA_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t 
     (*ofy) = (int16_t)YS;
 }
 
-void IIA_Square_2D(uint16_t *curr_img,uint16_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
+void ofoIIA_Square_2D(uint16_t *curr_img,uint16_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
 {
     int32_t  A=0, BD=0, C=0, E=0, F=0;
 
@@ -336,7 +336,7 @@ void IIA_Square_2D(uint16_t *curr_img,uint16_t *last_img, uint16_t rows,uint16_t
     (*ofy) = (int16_t)YS;
 }
 
-void LK_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
+void ofoLK_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
 {
     int32_t  A11=0, A12=0, A22=0, b1=0, b2=0;
     int16_t  F2F1, F4F3, FCF0;
@@ -387,7 +387,7 @@ void LK_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t col
     (*ofy) = (int16_t)YS;
 }
 
-void LK_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
+void ofoLK_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
 {
     int32_t  A11=0, A12=0, A22=0, b1=0, b2=0;
     int16_t  F2F1, F4F3, FCF0;
@@ -436,7 +436,7 @@ void LK_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows,uint16_t c
     (*ofy) = (int16_t)YS;
 }
 
-void LK_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
+void ofoLK_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
 {
     int32_t  A11=0, A12=0, A22=0, b1=0, b2=0;
 
@@ -493,7 +493,7 @@ void LK_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t c
     (*ofy) = (int16_t)YS;
 }
 
-void LK_Square_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
+void ofoLK_Square_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy)
 {
     int32_t  A11=0, A12=0, A22=0, b1=0, b2=0;
 
