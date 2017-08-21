@@ -224,7 +224,7 @@ void imgMakeFpn( uint8_t *F,  uint16_t numpix,  uint8_t modval)
 }
 
 
-void SubwinShort2D(
+void imgSubwinShort2D(
         uint16_t *I, 
         uint16_t *S, 
         uint8_t Icols, 
@@ -245,7 +245,7 @@ void SubwinShort2D(
     }
 }
 
-void SubwinShort2Dto1DVertical(
+void imgSubwinShort2Dto1DVertical(
         uint16_t *I, 
         uint16_t *S, 
         uint8_t Icols, 
@@ -269,7 +269,7 @@ void SubwinShort2Dto1DVertical(
     }
 }
 
-void SubwinShort2Dto1DHorizontal(
+void imgSubwinShort2Dto1DHorizontal(
         uint16_t *I, 
         uint16_t *S, 
         uint8_t Icols, 

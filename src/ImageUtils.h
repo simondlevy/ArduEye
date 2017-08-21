@@ -171,7 +171,7 @@ void imgMakeFpn(uint8_t * f, uint16_t numpix, uint8_t modval);
  * @param numcols number of columns of subwindow
  * NB: Untested
  */
-void Subwin2D(
+void imgSubwin2D(
         uint16_t * src, 
         uint16_t * dst, 
         uint8_t srccols, 
@@ -195,7 +195,7 @@ void Subwin2D(
  * 
  * NB: Untested
  */
-void Subwin2Dto1DHorizontal(
+void imgSubwin2Dto1DHorizontal(
         uint16_t * src, 
         uint16_t * dst, 
         uint8_t srccols, 
@@ -206,11 +206,11 @@ void Subwin2Dto1DHorizontal(
 
 /**
  * Extracts a subwindow from a 2D image and then sums rows to form a 1D image. 
- * See <b>Subwin2Dto1DHorizontal</b> for details.
+ * See <b>imgSubwin2Dto1DHorizontal</b> for details.
  * 
  * NB: Untested
  */
-void Subwin2Dto1DVertical(
+void imgSubwin2Dto1DVertical(
         uint16_t * src, 
         uint16_t * dst, 
         uint8_t srccols, 
