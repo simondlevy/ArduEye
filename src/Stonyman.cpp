@@ -290,7 +290,7 @@ void Stonyman::getImageAnalog(uint16_t *img,
         uint8_t colskip, 
         uint8_t input) 
 {
-    get_image(img, rowstart, numrows, rowskip, colstart, numcols, colskip, input, false);
+    get_image(img, rowstart, numrows, rowskip, colstart, numcols, colskip, input, true);
 }
 
 void Stonyman::getImageDigital(uint16_t *img, 
@@ -385,9 +385,40 @@ void Stonyman::findMaxDigital(
     find_max(rowstart, numrows, rowskip, colstart, numcols, colskip, input, maxrow, maxcol, true);
 }
 
+class MatlabFrameGrabber : protected FrameGrabber {
+
+    friend class Stonyman;
+
+    protected:
+
+        virtual void preProcess(void) override  
+        {
+            Serial.println("Img = [");
+        }
+
+        virtual void handlePixel(uint16_t pixel) override 
+        {
+            Serial.print(pixel);
+            Serial.print(" ");
+        }
+
+        virtual void handleRowEnd(void) override 
+        {
+            Serial.println(" ");
+        }
+
+        virtual void postProcess(void) override 
+        {
+            Serial.println("];");
+        }
+};
+
+
 void Stonyman::chipToMatlabAnalog(uint8_t input) 
 {
-    chip_to_matlab(input, false); 
+    MatlabFrameGrabber fg;
+    ImageBounds bds(0,  112, 1, 0, 112, 1);
+    processFrame(fg, bds, input, false);
 }
 
 void Stonyman::chipToMatlabDigital(uint8_t input) 
@@ -427,6 +458,45 @@ void Stonyman::chip_to_matlab(uint8_t input, bool use_digital)
     section_to_matlab(0, 112, 1, 0, 112, 1, input, use_digital);
 }
 
+void Stonyman::processFrame(FrameGrabber & grabber, ImageBounds & bounds, uint8_t input, bool use_digital)
+{
+    (void)use_digital;
+
+    grabber.preProcess();
+
+    set_pointer_value(SMH_SYS_ROWSEL, bounds._rowstart);
+
+    for (uint8_t row=0; row<bounds._numrows; row++) {
+
+        set_pointer_value(SMH_SYS_COLSEL, bounds._colstart);
+
+        for (uint8_t col=0; col<bounds._numcols; col++) {
+
+            // settling delay
+            delayMicroseconds(1);
+
+            // pulse amplifier if needed
+            if (use_amp) 
+                pulse_inphi(2);
+
+            delayMicroseconds(1);
+
+            uint16_t val = analogRead(input); // acquire pixel
+
+            grabber.handlePixel(val);
+
+            inc_value(bounds._colskip);
+        }
+
+        set_pointer(SMH_SYS_ROWSEL);
+        inc_value(bounds._rowskip); // go to next row
+
+        grabber.handleRowEnd();
+    }
+
+    grabber.postProcess();
+}
+
 void Stonyman::section_to_matlab(
         uint8_t rowstart, 
         uint8_t numrows, 
@@ -439,6 +509,7 @@ void Stonyman::section_to_matlab(
 {
     (void)use_digital;
 
+    // grabber.preProcess()
     Serial.println("Img = [");
 
     set_pointer_value(SMH_SYS_ROWSEL,rowstart);
@@ -462,6 +533,7 @@ void Stonyman::section_to_matlab(
 
             inc_value(colskip);
 
+            // grabber.handlePixel()
             Serial.print(val);
             Serial.print(" ");
         }
@@ -469,8 +541,11 @@ void Stonyman::section_to_matlab(
         set_pointer(SMH_SYS_ROWSEL);
         inc_value(rowskip); // go to next row
 
+        // grabber.handleRowEnd()
         Serial.println(" ");
     }
+
+    // grabber.postProcess()
     Serial.println("];");
 
 }

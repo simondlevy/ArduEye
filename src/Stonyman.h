@@ -70,6 +70,58 @@ static const uint8_t START_PIXEL = 18;
 static const uint16_t MAX_PIXELS  = MAX_ROWS * MAX_COLS;
 
 /**
+ * A helper class for handling frame-grabbing events
+ */
+class FrameGrabber {
+
+    friend class Stonyman;
+
+    protected:
+
+    /**
+     * Does something useful before frame is read.
+     */
+    virtual void preProcess(void) = 0;
+
+    /**
+     * Does something useful with the pixel just read.
+     */
+    virtual void handlePixel(uint16_t pixel) = 0;
+
+    /**
+     * Does something useful at the end of a row.
+     */
+    virtual void handleRowEnd(void) = 0;
+
+    /**
+     * Does something useful after frame is read.
+     */
+    virtual void postProcess(void) = 0;
+};
+
+/**
+ * A helper class for image bounds
+ */
+class ImageBounds {
+
+    friend class Stonyman;
+
+    protected:
+
+    uint8_t _rowstart; 
+    uint8_t _numrows; 
+    uint8_t _rowskip; 
+    uint8_t _colstart; 
+    uint8_t _numcols; 
+    uint8_t _colskip;
+
+    ImageBounds(uint8_t rowstart, uint8_t numrows, uint8_t rowskip, uint8_t colstart, uint8_t numcols, uint8_t colskip) :
+        _rowstart(rowstart), _numrows(numrows), _rowskip(rowskip), _colstart(colstart), _numcols(numcols), _colskip(colskip) { }
+
+    ImageBounds(void) : _rowstart(0), _numrows(112), _rowskip(1), _colstart(0), _numcols(112), _colskip(0) { }
+};
+
+/**
  *	A class for interacting with the Stonyman2 vision chip from Centeye, Inc.
  *  For documentation on this chip see 
  *  https://github.com/simondlevy/Centeye/blob/master/extras/docs/Stonyman_Hawksbill_ChipInstructions_Rev10_20130312.pdf
@@ -448,6 +500,9 @@ class Stonyman
                 uint8_t numcols, 
                 uint8_t colskip, 
                 uint8_t input);   
+
+         void processFrame(FrameGrabber & grabber, ImageBounds & bounds, uint8_t input, bool use_digital);
+
     private:
 
         //indicates whether amplifier is in use 
