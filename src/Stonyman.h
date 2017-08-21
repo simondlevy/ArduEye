@@ -115,6 +115,8 @@ class ImageBounds {
     uint8_t _numcols; 
     uint8_t _colskip;
 
+    public:
+
     ImageBounds(uint8_t rowstart, uint8_t numrows, uint8_t rowskip, uint8_t colstart, uint8_t numcols, uint8_t colskip) :
         _rowstart(rowstart), _numrows(numrows), _rowskip(rowskip), _colstart(colstart), _numcols(numcols), _colskip(colskip) { }
 

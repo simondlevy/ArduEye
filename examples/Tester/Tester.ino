@@ -110,6 +110,36 @@ static Stonyman stonyman(RESP, INCP, RESV, INCV);
 //for communicating with GUI
 static GUIClient gui;
 
+//helper class for genrating Matlab-formatted output
+class MatlabFrameGrabber2 : public FrameGrabber {
+
+    friend class Stonyman;
+
+    protected:
+
+        virtual void preProcess(void) override  
+        {
+            Serial.println("Img = [");
+        }
+
+        virtual void handlePixel(uint16_t pixel) override 
+        {
+            Serial.print(pixel);
+            Serial.print(" ");
+        }
+
+        virtual void handleRowEnd(void) override 
+        {
+            Serial.println(" ");
+        }
+
+        virtual void postProcess(void) override 
+        {
+            Serial.println("];");
+        }
+};
+
+
 //=======================================================================
 // FUNCTIONS DEFINED FOR THIS SKETCH
 
@@ -236,8 +266,12 @@ static void processCommands()
                 break;
 
                 //print the entire chip over Serial in Matlab format
-            case 'M':   
-                stonyman.chipToMatlabAnalog(input);
+            case 'M':  
+                {
+                    MatlabFrameGrabber2 fg;
+                    ImageBounds bds(0,  112, 1, 0, 112, 1);
+                    stonyman.processFrame(fg, bds, input, false);
+                }
                 break;
 
                 //change NBIAS

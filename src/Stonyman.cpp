@@ -385,40 +385,8 @@ void Stonyman::findMaxDigital(
     find_max(rowstart, numrows, rowskip, colstart, numcols, colskip, input, maxrow, maxcol, true);
 }
 
-class MatlabFrameGrabber : protected FrameGrabber {
-
-    friend class Stonyman;
-
-    protected:
-
-        virtual void preProcess(void) override  
-        {
-            Serial.println("Img = [");
-        }
-
-        virtual void handlePixel(uint16_t pixel) override 
-        {
-            Serial.print(pixel);
-            Serial.print(" ");
-        }
-
-        virtual void handleRowEnd(void) override 
-        {
-            Serial.println(" ");
-        }
-
-        virtual void postProcess(void) override 
-        {
-            Serial.println("];");
-        }
-};
-
-
 void Stonyman::chipToMatlabAnalog(uint8_t input) 
 {
-    MatlabFrameGrabber fg;
-    ImageBounds bds(0,  112, 1, 0, 112, 1);
-    processFrame(fg, bds, input, false);
 }
 
 void Stonyman::chipToMatlabDigital(uint8_t input) 
