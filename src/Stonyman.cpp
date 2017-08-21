@@ -1,7 +1,9 @@
 /*
-Stonyman.h Library for the Stonyman Centeye Vision Chip
+Stonyman.cpp Library for the Stonyman2 Centeye Vision Chip
 
 Basic functions to operate Stonyman with Arduino boards
+
+See Stonyman.h for documentation
 
 Copyright (c) 2012 Centeye, Inc. 
 All rights reserved.
@@ -56,6 +58,9 @@ static const int SMH1_VDD_5V0   = 1;
 static const int SMH_VREF_5V0   = 30;	//vref for 5 volts
 static const int SMH_NBIAS_5V0  = 55;	//nbias for 5 volts
 static const int SMH_AOBIAS_5V0 = 55;	//aobias for 5 volts
+
+/*********************************************************************/
+// public methods
 
 Stonyman::Stonyman(uint8_t resp, uint8_t incp, uint8_t resv, uint8_t incv, uint8_t inphi)
 {
@@ -300,6 +305,176 @@ void Stonyman::getImageDigital(uint16_t *img,
     get_image(img, rowstart, numrows, rowskip, colstart, numcols, colskip, input, true);
 }
 
+void Stonyman::getImageRowSumAnalog(
+        uint16_t *img, 
+        uint8_t rowstart, 
+        uint8_t numrows, 
+        uint8_t rowskip, 
+        uint8_t colstart, 
+        uint8_t numcols, 
+        uint8_t colskip, 
+        uint8_t input)
+{
+    get_image_row_sum(img, rowstart, numrows, rowskip, colstart, numcols, colskip, input, false);
+}
+
+void Stonyman::getImageRowSumDigital(
+        uint16_t *img, 
+        uint8_t rowstart, 
+        uint8_t numrows, 
+        uint8_t rowskip, 
+        uint8_t colstart, 
+        uint8_t numcols, 
+        uint8_t colskip, 
+        uint8_t input)
+{
+    get_image_row_sum(img, rowstart, numrows, rowskip, colstart, numcols, colskip, input, true);
+}
+
+void Stonyman::getImageColSumAnalog(
+        uint16_t *img, 
+        uint8_t rowstart, 
+        uint8_t numrows, 
+        uint8_t rowskip, 
+        uint8_t colstart, 
+        uint8_t numcols, 
+        uint8_t colskip, 
+        uint8_t input) 
+{
+    get_image_col_sum(img, rowstart, numrows, rowskip, colstart, numcols, colskip, input, false);
+}
+
+void Stonyman::getImageColSumDigital(
+        uint16_t *img, 
+        uint8_t rowstart, 
+        uint8_t numrows, 
+        uint8_t rowskip, 
+        uint8_t colstart, 
+        uint8_t numcols, 
+        uint8_t colskip, 
+        uint8_t input) 
+{
+    get_image_col_sum(img, rowstart, numrows, rowskip, colstart, numcols, colskip, input, true);
+}
+    
+void Stonyman::findMaxAnalog(
+        uint8_t rowstart, 
+        uint8_t numrows, 
+        uint8_t rowskip, 
+        uint8_t colstart, 
+        uint8_t numcols,
+        uint8_t colskip, 
+        uint8_t input,
+        uint8_t *maxrow, 
+        uint8_t *maxcol)
+{
+    find_max(rowstart, numrows, rowskip, colstart, numcols, colskip, input, maxrow, maxcol, false);
+}
+
+void Stonyman::findMaxDigital(
+        uint8_t rowstart, 
+        uint8_t numrows, 
+        uint8_t rowskip, 
+        uint8_t colstart, 
+        uint8_t numcols,
+        uint8_t colskip, 
+        uint8_t input,
+        uint8_t *maxrow, 
+        uint8_t *maxcol)
+{
+    find_max(rowstart, numrows, rowskip, colstart, numcols, colskip, input, maxrow, maxcol, true);
+}
+
+void Stonyman::chipToMatlabAnalog(uint8_t input) 
+{
+    chip_to_matlab(input, false); 
+}
+
+void Stonyman::chipToMatlabDigital(uint8_t input) 
+{
+    chip_to_matlab(input, true); 
+}
+
+void Stonyman::sectionToMatlabAnalog(
+        uint8_t rowstart, 
+        uint8_t numrows, 
+        uint8_t rowskip, 
+        uint8_t colstart, 
+        uint8_t numcols, 
+        uint8_t colskip, 
+        uint8_t input) 
+{
+    section_to_matlab(rowstart, numrows, rowskip, colstart, numcols, colskip, input, false);
+}
+
+void Stonyman::sectionToMatlabDigital(
+        uint8_t rowstart, 
+        uint8_t numrows, 
+        uint8_t rowskip, 
+        uint8_t colstart, 
+        uint8_t numcols, 
+        uint8_t colskip, 
+        uint8_t input) 
+{
+    section_to_matlab(rowstart, numrows, rowskip, colstart, numcols, colskip, input, true);
+}
+
+/*********************************************************************/
+// private methods
+
+void Stonyman::chip_to_matlab(uint8_t input, bool use_digital) 
+{
+    section_to_matlab(0, 112, 1, 0, 112, 1, input, use_digital);
+}
+
+void Stonyman::section_to_matlab(
+        uint8_t rowstart, 
+        uint8_t numrows, 
+        uint8_t rowskip, 
+        uint8_t colstart, 
+        uint8_t numcols, 
+        uint8_t colskip, 
+        uint8_t input,
+        bool use_digital) 
+{
+    (void)use_digital;
+
+    Serial.println("Img = [");
+
+    set_pointer_value(SMH_SYS_ROWSEL,rowstart);
+
+    for (uint8_t row=0; row<numrows; row++) {
+
+        set_pointer_value(SMH_SYS_COLSEL,colstart);
+
+        for (uint8_t col=0; col<numcols; col++) {
+
+            // settling delay
+            delayMicroseconds(1);
+
+            // pulse amplifier if needed
+            if (use_amp) 
+                pulse_inphi(2);
+
+            delayMicroseconds(1);
+
+            uint16_t val = analogRead(input); // acquire pixel
+
+            inc_value(colskip);
+
+            Serial.print(val);
+            Serial.print(" ");
+        }
+
+        set_pointer(SMH_SYS_ROWSEL);
+        inc_value(rowskip); // go to next row
+
+        Serial.println(" ");
+    }
+    Serial.println("];");
+
+}
+
 void Stonyman::get_image(
         uint16_t *img, 
         uint8_t rowstart, 
@@ -340,121 +515,16 @@ void Stonyman::get_image(
 
             uint16_t val = analogRead(input); // acquire pixel XXX need to support digital (SPI) as well
 
-            *pimg = val; // store pixel
-            pimg++; // advance pointer
             inc_value(colskip); // go to next column
+
+            *pimg++ = val; // store pixel
         }
-        set_pointer(SMH_SYS_ROWSEL);
-        inc_value(rowskip); // go to next row
-    }
-}
-
-void Stonyman::getImageRowSumAnalog(
-        uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowskip, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colskip, 
-        uint8_t input)
-{
-    get_image_row_sum(img, rowstart, numrows, rowskip, colstart, numcols, colskip, input, false);
-}
-
-void Stonyman::getImageRowSumDigital(
-        uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowskip, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colskip, 
-        uint8_t input)
-{
-    get_image_row_sum(img, rowstart, numrows, rowskip, colstart, numcols, colskip, input, true);
-}
-
-void Stonyman::get_image_row_sum(
-        uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowskip, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colskip, 
-        uint8_t input,
-        bool use_digital) 
-{
-    (void)use_digital;
-
-    uint16_t *pimg = img; // pointer to output image array
-    uint16_t total=0;
-
-    // Go to first row
-    set_pointer_value(SMH_SYS_ROWSEL,rowstart);
-
-    // Loop through all rows
-    for (uint8_t row=0; row<numrows; ++row) {
-
-        // Go to first column
-        set_pointer_value(SMH_SYS_COLSEL,colstart);
-
-        total=0;
-
-        // Loop through all columns
-        for (uint8_t col=0; col<numcols; ++col) {
-
-            // settling delay
-            delayMicroseconds(1);
-
-            // pulse amplifier if needed
-            if (use_amp) 
-                pulse_inphi(2);
-
-            // get data value
-            delayMicroseconds(1);
-
-            uint16_t val = analogRead(input); // acquire pixel
-
-            total+=val;	//sum values along row
-            inc_value(colskip); // go to next column
-        }
-
-        *pimg = total>>4; // store pixel divide to avoid overflow
-        pimg++; // advance pointer
 
         set_pointer(SMH_SYS_ROWSEL);
         inc_value(rowskip); // go to next row
     }
 }
 
-void Stonyman::getImageColSumAnalog(
-        uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowskip, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colskip, 
-        uint8_t input) 
-{
-    get_image_col_sum(img, rowstart, numrows, rowskip, colstart, numcols, colskip, input, false);
-}
-
-void Stonyman::getImageColSumDigital(
-        uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowskip, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colskip, 
-        uint8_t input) 
-{
-    get_image_col_sum(img, rowstart, numrows, rowskip, colstart, numcols, colskip, input, true);
-}
-    
 void Stonyman::get_image_col_sum(
         uint16_t *img, 
         uint8_t rowstart, 
@@ -501,42 +571,13 @@ void Stonyman::get_image_col_sum(
             inc_value(rowskip); // go to next row
         }
 
-        *pimg = total>>4; // store pixel
-        pimg++; // advance pointer
+        *pimg++ = total>>4; // store pixel and advance pointer
 
         set_pointer(SMH_SYS_COLSEL);
         inc_value(colskip); // go to next col
     }
 }
 
-
-void Stonyman::findMaxAnalog(
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowskip, 
-        uint8_t colstart, 
-        uint8_t numcols,
-        uint8_t colskip, 
-        uint8_t input,
-        uint8_t *maxrow, 
-        uint8_t *maxcol)
-{
-    find_max(rowstart, numrows, rowskip, colstart, numcols, colskip, input, maxrow, maxcol, false);
-}
-
-void Stonyman::findMaxDigital(
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowskip, 
-        uint8_t colstart, 
-        uint8_t numcols,
-        uint8_t colskip, 
-        uint8_t input,
-        uint8_t *maxrow, 
-        uint8_t *maxcol)
-{
-    find_max(rowstart, numrows, rowskip, colstart, numcols, colskip, input, maxrow, maxcol, true);
-}
 
 void Stonyman::find_max(
         uint8_t rowstart, 
@@ -608,73 +649,8 @@ void Stonyman::find_max(
     *maxcol = bestcol;
 }
 
-void Stonyman::chipToMatlabAnalog(uint8_t input) 
-{
-    chip_to_matlab(input, false); 
-}
-
-void Stonyman::chipToMatlabDigital(uint8_t input) 
-{
-    chip_to_matlab(input, true); 
-}
-
-void Stonyman::chip_to_matlab(uint8_t input, bool use_digital) 
-{
-    (void)use_digital;
-
-    Serial.println("Img = [");
-    set_pointer_value(SMH_SYS_ROWSEL,0); // set row = 0
-    for (uint8_t row=0; row<112; ++row) {
-        set_pointer_value(SMH_SYS_COLSEL,0); // set column = 0
-        for (uint8_t col=0; col<112; ++col) {
-            // settling delay
-            delayMicroseconds(1);
-            // pulse amplifier if needed
-            if (use_amp) 
-                pulse_inphi(2);
-
-            // get data value
-            delayMicroseconds(1);
-
-            uint16_t val = analogRead(input); // acquire pixel
-
-            // increment column
-            inc_value(1);
-            Serial.print(val);
-            Serial.print(" ");
-        }
-        set_pointer(SMH_SYS_ROWSEL); // point to row
-        inc_value(1); // increment row
-        Serial.println(" ");
-    }
-    Serial.println("];");
-}
-
-void Stonyman::sectionToMatlabAnalog(
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowskip, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colskip, 
-        uint8_t input) 
-{
-    section_to_matlab(rowstart, numrows, rowskip, colstart, numcols, colskip, input, false);
-}
-
-void Stonyman::sectionToMatlabDigital(
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowskip, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colskip, 
-        uint8_t input) 
-{
-    section_to_matlab(rowstart, numrows, rowskip, colstart, numcols, colskip, input, true);
-}
-
-void Stonyman::section_to_matlab(
+void Stonyman::get_image_row_sum(
+        uint16_t *img, 
         uint8_t rowstart, 
         uint8_t numrows, 
         uint8_t rowskip, 
@@ -686,14 +662,23 @@ void Stonyman::section_to_matlab(
 {
     (void)use_digital;
 
-    Serial.println("Img = [");
+    uint16_t *pimg = img; // pointer to output image array
+    uint16_t total=0;
+
+    // Go to first row
     set_pointer_value(SMH_SYS_ROWSEL,rowstart);
 
-    for (uint8_t row=0; row<numrows; row++) {
+    // Loop through all rows
+    for (uint8_t row=0; row<numrows; ++row) {
 
+        // Go to first column
         set_pointer_value(SMH_SYS_COLSEL,colstart);
 
-        for (uint8_t col=0; col<numcols; col++) {
+        total=0;
+
+        // Loop through all columns
+        for (uint8_t col=0; col<numcols; ++col) {
+
             // settling delay
             delayMicroseconds(1);
 
@@ -701,18 +686,19 @@ void Stonyman::section_to_matlab(
             if (use_amp) 
                 pulse_inphi(2);
 
+            // get data value
             delayMicroseconds(1);
 
             uint16_t val = analogRead(input); // acquire pixel
 
-            inc_value(colskip);
-            Serial.print(val);
-            Serial.print(" ");
+            total+=val;	//sum values along row
+            inc_value(colskip); // go to next column
         }
+
+        *pimg = total>>4; // store pixel divide to avoid overflow
+        pimg++; // advance pointer
+
         set_pointer(SMH_SYS_ROWSEL);
         inc_value(rowskip); // go to next row
-        Serial.println(" ");
     }
-    Serial.println("];");
-
 }
