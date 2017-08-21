@@ -92,6 +92,11 @@ class FrameGrabber {
     }
 
     /**
+     * Does something useful at the start of a row.
+     */
+    virtual void handleRowStart(void) { }
+
+    /**
      * Does something useful at the end of a row.
      */
     virtual void handleRowEnd(void) { }

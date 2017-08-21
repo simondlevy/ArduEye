@@ -449,6 +449,8 @@ void Stonyman::process_frame(FrameGrabber & grabber, ImageBounds & bounds, uint8
 
         set_pointer_value(SMH_SYS_COLSEL, bounds._colstart);
 
+        grabber.handleRowStart();
+
         for (uint8_t col=0; col<bounds._numcols; col++) {
 
             // settling delay
@@ -476,59 +478,6 @@ void Stonyman::process_frame(FrameGrabber & grabber, ImageBounds & bounds, uint8
     grabber.postProcess();
 }
 
-
-void Stonyman::get_image_col_sum(
-        uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colstride, 
-        uint8_t input,
-        bool use_digital) 
-{
-    (void)use_digital;
-
-    uint16_t *pimg = img; // pointer to output image array
-    uint16_t total=0;
-
-    // Go to first col
-    set_pointer_value(SMH_SYS_COLSEL,colstart);
-
-    // Loop through all cols
-    for (uint8_t col=0; col<numcols; ++col) {
-
-        // Go to first row
-        set_pointer_value(SMH_SYS_ROWSEL,rowstart);
-
-        total=0;
-
-        // Loop through all rows
-        for (uint8_t row=0; row<numrows; ++row) {
-
-            // settling delay
-            delayMicroseconds(1);
-
-            // pulse amplifier if needed
-            if (use_amp) 
-                pulse_inphi(2);
-
-            // get data value
-            delayMicroseconds(1);
-
-            uint16_t val = analogRead(input); // acquire pixel
-
-            total+=val;	//sum value along column
-            inc_value(rowstride); // go to next row
-        }
-
-        *pimg++ = total>>4; // store pixel and advance pointer
-
-        set_pointer(SMH_SYS_COLSEL);
-        inc_value(colstride); // go to next col
-    }
-}
 
 //helper class for finding maximum pixel values in image
 class MaxFrameGrabber : protected FrameGrabber {
@@ -589,7 +538,61 @@ void Stonyman::find_max(
     *maxcol = fg.bestcol;
 }
 
+// helper class for computing row sums
+class RowSumFrameGrabber : protected FrameGrabber {
+
+    friend class Stonyman;
+
+    private:
+
+    uint16_t * pimg;
+    uint16_t total;
+
+    protected:
+
+    RowSumFrameGrabber(uint16_t * img) 
+    {
+        pimg = img;
+    }
+
+    virtual void handleRowStart(void) 
+    { 
+        total = 0;
+    }
+
+    virtual void handlePixel(uint8_t row, uint8_t col, uint16_t pixel, bool use_amp) 
+    { 
+        (void)row; 
+        (void)col; 
+        (void)use_amp;
+
+        total += pixel;
+    }
+
+    virtual void handleRowEnd(void) 
+    {
+        *pimg++ = total>>4; // store pixel divide to avoid overflow, then advance pointer
+    }
+};
+
+
 void Stonyman::get_image_row_sum(
+        uint16_t *img, 
+        uint8_t rowstart, 
+        uint8_t numrows, 
+        uint8_t rowstride, 
+        uint8_t colstart, 
+        uint8_t numcols, 
+        uint8_t colstride, 
+        uint8_t input,
+        bool use_digital) 
+{
+    RowSumFrameGrabber fg(img);
+    ImageBounds bds(rowstart, numrows, rowstride, colstart, numcols, colstride);
+    process_frame(fg, bds, input, use_digital);
+}
+
+void Stonyman::get_image_col_sum(
         uint16_t *img, 
         uint8_t rowstart, 
         uint8_t numrows, 
@@ -605,19 +608,19 @@ void Stonyman::get_image_row_sum(
     uint16_t *pimg = img; // pointer to output image array
     uint16_t total=0;
 
-    // Go to first row
-    set_pointer_value(SMH_SYS_ROWSEL,rowstart);
+    // Go to first col (NB: columns are outer loop)
+    set_pointer_value(SMH_SYS_COLSEL,colstart);
 
-    // Loop through all rows
-    for (uint8_t row=0; row<numrows; ++row) {
+    // Loop through all cols
+    for (uint8_t col=0; col<numcols; ++col) {
 
-        // Go to first column
-        set_pointer_value(SMH_SYS_COLSEL,colstart);
+        // Go to first row
+        set_pointer_value(SMH_SYS_ROWSEL,rowstart);
 
         total=0;
 
-        // Loop through all columns
-        for (uint8_t col=0; col<numcols; ++col) {
+        // Loop through all rows
+        for (uint8_t row=0; row<numrows; ++row) {
 
             // settling delay
             delayMicroseconds(1);
@@ -631,14 +634,15 @@ void Stonyman::get_image_row_sum(
 
             uint16_t val = analogRead(input); // acquire pixel
 
-            total+=val;	//sum values along row
-            inc_value(colstride); // go to next column
+            total+=val;	//sum value along column
+            inc_value(rowstride); // go to next row
         }
 
-        *pimg = total>>4; // store pixel divide to avoid overflow
-        pimg++; // advance pointer
+        *pimg++ = total>>4; // store pixel and advance pointer
 
-        set_pointer(SMH_SYS_ROWSEL);
-        inc_value(rowstride); // go to next row
+        set_pointer(SMH_SYS_COLSEL);
+        inc_value(colstride); // go to next col
     }
 }
+
+
