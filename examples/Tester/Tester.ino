@@ -110,7 +110,7 @@ static Stonyman stonyman(RESP, INCP, RESV, INCV);
 //for communicating with GUI
 static GUIClient gui;
 
-//helper class for genrating Matlab-formatted output
+//helper class for generating Matlab-formatted output
 class MatlabFrameGrabber : public FrameGrabber {
 
     friend class Stonyman;
@@ -122,8 +122,12 @@ class MatlabFrameGrabber : public FrameGrabber {
             Serial.println("Img = [");
         }
 
-        virtual void handlePixel(uint16_t pixel) override 
+        virtual void handlePixel(uint8_t row, uint8_t col, uint16_t pixel, bool use_amp) override 
         {
+            (void)row;
+            (void)col;
+            (void)use_amp;
+
             Serial.print(pixel);
             Serial.print(" ");
         }

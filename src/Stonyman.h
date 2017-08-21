@@ -86,7 +86,10 @@ class FrameGrabber {
     /**
      * Does something useful with the pixel just read.
      */
-    virtual void handlePixel(uint16_t pixel) { (void)pixel; }
+    virtual void handlePixel(uint8_t row, uint8_t col, uint16_t pixel, bool use_amp) 
+    { 
+        (void)row; (void)col; (void)pixel; (void)use_amp;
+    }
 
     /**
      * Does something useful at the end of a row.

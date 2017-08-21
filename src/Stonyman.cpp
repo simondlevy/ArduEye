@@ -410,8 +410,12 @@ class ArrayFrameGrabber : protected FrameGrabber {
         _pimg = _img;
     }
 
-    virtual void handlePixel(uint16_t pixel) override 
+    virtual void handlePixel(uint8_t row, uint8_t col, uint16_t pixel, bool use_amp) override 
     {
+        (void)row;
+        (void)col;
+        (void)use_amp;
+
         *_pimg++ = pixel;
     }
 };
@@ -425,11 +429,11 @@ void Stonyman::get_image(
         uint8_t numcols, 
         uint8_t colstride, 
         uint8_t input,
-        bool use_analog)
+        bool use_digital)
 {
     ImageBounds bds(rowstart, numrows, rowstride, colstart, numcols, colstride);
     ArrayFrameGrabber fg(img);
-    process_frame(fg, bds, input, use_analog);
+    process_frame(fg, bds, input, use_digital);
 }
 
 
@@ -458,7 +462,7 @@ void Stonyman::process_frame(FrameGrabber & grabber, ImageBounds & bounds, uint8
 
             uint16_t val = analogRead(input); // acquire pixel
 
-            grabber.handlePixel(val);
+            grabber.handlePixel(row, col, val, use_amp);
 
             inc_value(bounds._colstride);
         }
@@ -526,6 +530,45 @@ void Stonyman::get_image_col_sum(
     }
 }
 
+//helper class for finding maximum pixel values in image
+class MaxFrameGrabber : protected FrameGrabber {
+
+    friend class Stonyman;
+
+    protected:
+
+    uint16_t minval;
+    uint16_t maxval;
+    uint16_t bestrow;
+    uint16_t bestcol;
+
+    virtual void preProcess(void) override
+    {
+        maxval=5000;
+        minval=0;
+        bestrow=0;
+        bestcol=0;
+    }
+
+    virtual void handlePixel(uint8_t row, uint8_t col, uint16_t pixel, bool use_amp) override 
+    {
+        if(use_amp)	{ //amplifier is inverted
+            if (pixel>minval) { 	//find max val (bright)
+                bestrow=row;
+                bestcol=col;
+                minval=pixel;
+            }
+        }
+        else {		//unamplified
+            if (pixel<maxval) {	//find min val (bright)
+                bestrow=row;
+                bestcol=col;
+                maxval=pixel;
+            }
+        }
+    }
+};
+
 
 void Stonyman::find_max(
         uint8_t rowstart, 
@@ -539,62 +582,11 @@ void Stonyman::find_max(
         uint8_t *maxcol,
         bool use_digital)
 {
-    (void)use_digital;
-
-    uint16_t maxval=5000,minval=0,val;
-    uint8_t bestrow=0,bestcol=0;
-
-    // Go to first row
-    set_pointer_value(SMH_SYS_ROWSEL,rowstart);
-
-    // Loop through all rows
-    for (uint8_t row=0; row<numrows; ++row) {
-
-        // Go to first column
-        set_pointer_value(SMH_SYS_COLSEL,colstart);
-
-        // Loop through all columns
-        for (uint8_t col=0; col<numcols; ++col) {
-
-            // settling delay
-            delayMicroseconds(1);
-
-            // pulse amplifier if needed
-            if (use_amp) 
-                pulse_inphi(2);
-
-            // get data value
-            delayMicroseconds(1);
-
-            val = analogRead(input); // acquire pixel
-
-            if(use_amp)	//amplifier is inverted
-            {
-                if (val>minval) 	//find max val (bright)
-                {
-                    bestrow=row;
-                    bestcol=col;
-                    minval=val;
-                }
-            }
-            else		//unamplified
-            {
-                if (val<maxval) 	//find min val (bright)
-                {
-                    bestrow=row;
-                    bestcol=col;
-                    maxval=val;
-                }
-            }
-
-            inc_value(colstride); // go to next column
-        }
-        set_pointer(SMH_SYS_ROWSEL);
-        inc_value(rowstride); // go to next row
-    }
-
-    *maxrow = bestrow;
-    *maxcol = bestcol;
+    MaxFrameGrabber fg;
+    ImageBounds bds(rowstart, numrows, rowstride, colstart, numcols, colstride);
+    process_frame(fg, bds, input, use_digital);
+    *maxrow = fg.bestrow;
+    *maxcol = fg.bestcol;
 }
 
 void Stonyman::get_image_row_sum(
