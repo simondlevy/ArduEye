@@ -70,7 +70,9 @@ static const uint8_t START_PIXEL = 18;
 static const uint16_t MAX_PIXELS  = MAX_ROWS * MAX_COLS;
 
 /**
- * A helper class for handling frame-grabbing events
+ * A helper class for handling frame-grabbing events.
+ * Useful in typical applications where outer loop is rows, inner is columns.
+ * Methods are called automatically by Stonyman object.
  */
 class FrameGrabber {
 
@@ -108,7 +110,7 @@ class FrameGrabber {
 };
 
 /**
- * A helper class for image bounds
+ * A container class for image bounds
  */
 class ImageBounds {
 
@@ -275,46 +277,26 @@ class Stonyman
          * In this case the pointer img points to the output array. 
          *
          * @param img (output) pointer to image array, an array of signed uint16_ts
-         * @param rowstart first row to acquire
-         * @param numrows number of rows to acquire
-         * @param rowstride strideping between rows (useful if binning is used)
-         * @param colstart first column to acquire
-         * @param numcols number of columns to acquire
-         * @param colstride strideping between columns
          * @param input which analog input pin to use
+         * @param bounds optional ImageBounds object
          * 
          * Examples:
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;getImageAnalog(img,16,8,1,24,8,1,0): 
+         * &nbsp;&nbsp;&nbsp;&nbsp;getImageAnalog(img, 0, ImageBounds(16,8,1,24,8,1)): 
          * Grab an 8x8 window of pixels at raw resolution starting at row 
          * 16, column 24, from chip using onboard ADC at input 0
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;getImageAnalog(img,0,14,8,0,14,8,2): 
+         * &nbsp;&nbsp;&nbsp;&nbsp;getImageAnalog(img, 2);
          * Grab entire Stonyman chip when using 8x8 binning. Grab from input 2.
          */
-        void getImageAnalog(
-                uint16_t *img, 
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowstride, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colstride, 
-                uint8_t input);
+        void getImageAnalog(uint16_t *img, uint8_t input, ImageBounds & bounds);
+        void getImageAnalog(uint16_t *img, uint8_t input);
 
         /**
           * Digital (SPI) version of above.
-          * @param input pin for chip-select signal
           */ 
-        void getImageDigital(
-                uint16_t *img, 
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowstride, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colstride, 
-                uint8_t input);
+        void getImageDigital(uint16_t *img, uint8_t input, ImageBounds & bounds);
+        void getImageDigital(uint16_t *img, uint8_t input);
 
         /**
          * Acquires a box section of a Stonyman or Hawksbill 
@@ -325,46 +307,27 @@ class Stonyman
          * In this case the pointer img points to the output array. 
          *
          * @param img (output): pointer to image array, an array of signed uint16_ts
-         * @param rowstart: first row to acquire
-         * @param numrows: number of rows to acquire
-         * @param rowstride: strideping between rows (useful if binning is used)
-         * @param colstart: first column to acquire
-         * @param numcols: number of columns to acquire
-         * @param colstride: strideping between columns
          * @param input which analog input pin to use
+         * @param bounds optional ImageBounds object
          *
          * Examples:
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;getImage(img,16,8,1,24,8,1,0): 
+         * &nbsp;&nbsp;&nbsp;&nbsp;getImage(img, 0, ImageBounds(16,8,1,24,8,1)): 
          * Grab an 8x8 window of pixels at raw resolution starting at row 
          * 16, column 24, from chip using onboard ADC at input 0
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;getImage(img,0,14,8,0,14,8,2): 
+         * &nbsp;&nbsp;&nbsp;&nbsp;getImage(img,2, ImageBounds(0,14,8,0,14,8)): 
          * Grab entire Stonyman chip when using 8x8 binning. Grab from input 2.
          */
-        void getImageRowSumAnalog(
-                uint16_t *img, 
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowstride, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colstride, 
-                uint8_t input);
+        void getRowSumAnalog(uint16_t *img, uint8_t input, ImageBounds & bounds);
+        void getRowSumAnalog(uint16_t *img, uint8_t input);
 
         /**
           * Digital (SPI) version of above.
           * @param input pin for chip-select signal
           */ 
-        void getImageRowSumDigital(
-                uint16_t *img, 
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowstride, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colstride, 
-                uint8_t input);
+        void getRowSumDigital(uint16_t *img, uint8_t input, ImageBounds & bounds);
+        void getRowSumDigital(uint16_t *img, uint8_t input);
 
         /**
          * Acquires a box section of a Stonyman or Hawksbill 
@@ -375,114 +338,69 @@ class Stonyman
          * In this case the pointer img points to the output array. 
          *
          * @param img (output) pointer to image array, an array of signed uint16_ts
-         * @param rowstart first row to acquire
-         * @param numrows number of rows to acquire
-         * @param rowstride strideping between rows (useful if binning is used)
-         * @param colstart first column to acquire
-         * @param numcols number of columns to acquire
-         * @param colstride strideping between columns
          * @param input which analog input pin to use
+         * @param bounds optional Bounds object
          * 
          * Examples:
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;getImage(img,16,8,1,24,8,1,0): 
+         * &nbsp;&nbsp;&nbsp;&nbsp;get(img, 0, ImageBounds(16,8,1,24,8,1)): 
          * Grab an 8x8 window of pixels at raw resolution starting at row 
          * 16, column 24, from chip using onboard ADC at input 0
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;getImage(img,0,14,8,0,14,8,2): 
+         * &nbsp;&nbsp;&nbsp;&nbsp;get(img, 2, ImageBounds(0,14,8,0,14,8,2)): 
          * Grab entire Stonyman chip when using 8x8 binning. Grab from input 2.
          */
-        void getImageColSumAnalog(
-                uint16_t *img, 
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowstride, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colstride, 
-                uint8_t input);
+        void getColSumAnalog(uint16_t *img, uint8_t input, ImageBounds & bounds);
+        void getColSumAnalog(uint16_t *img, uint8_t input);
 
         /**
           * Digital (SPI) version of above.
           * @param input pin for chip-select signal
           */ 
-        void getImageColSumDigital(
-                uint16_t *img, 
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowstride, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colstride, 
-                uint8_t input);
+        void getColSumDigital(uint16_t *img, uint8_t input, ImageBounds & bounds);
+        void getColSumDigital(uint16_t *img, uint8_t input);
 
         /**
-         * Searches over a block section of a Stonyman or Hawksbill chip
+         * Searches over a block section of a Stonyman chip
          * to find the brightest pixel. This function is intended to be used 
          * for things like finding the location of a pinhole in response to 
          * a bright light.
          *
-         * @param rowstart first row to search
-         * @param numrows number of rows to search
-         * @param rowstride strideping between rows (useful if binning is used)
-         * @param colstart first column to search
-         * @param numcols number of columns to search
-         * @param colstride strideping between columns
-         * @param input which analog input to use
-         * @param maxrow (output) pointer to variable to write row of brightest pixel
-         * @param maxcol (output) pointer to variable to write column of brightest pixel
          * @param input pin for chip-select signal
+         * @param maxrow gets row index of brightest pixel
+         * @param maxcol gets column index of brightest pixel
          *
          * Example:
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;findMaxAnalog(8,104,1,8,104,1,0,&rowwinner, &colwinner): 
+         * &nbsp;&nbsp;&nbsp;&nbsp;findMaxAnalog(0, &rowineer, & colwinner, (8,104,1,8,104,1)):
          * Search rows 8...104 and columns 8...104 for brightest pixel, using analog input 0
          */
-        void findMaxAnalog(
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowstride, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colstride, 
-                uint8_t input,
-                uint8_t *maxrow, 
-                uint8_t *maxcol);
+        void findMaxAnalog(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, ImageBounds & bounds);
+        void findMaxAnalog(uint8_t input, uint8_t *maxrow, uint8_t *maxcol);
 
         /**
           * Digital (SPI) version of above.
           * @param input pin for chip-select signal
           */ 
-         void findMaxDigital(
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowstride, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colstride, 
-                uint8_t input,
-                uint8_t *maxrow, 
-                uint8_t *maxcol);
+        void findMaxDigital(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, ImageBounds & bounds);
+        void findMaxDigital(uint8_t input, uint8_t *maxrow, uint8_t *maxcol);
 
          /**
            * Processes one frame of image data from Stonyman2 using analog-to-digital (ADC) 
            * converter on the Arduino.
            *
            * @param fg FrameGrabber object
-           * @param bounds ImageBounds object
            * @param input input pin number
+           * @param bounds ImageBounds object
            */
-         void processFrameAnalog(FrameGrabber & fg, ImageBounds & bounds, uint8_t input) { process_frame(fg, bounds, input, false); }
+         void processFrameAnalog(FrameGrabber & fg, uint8_t input, ImageBounds & bounds);
+         void processFrameAnalog(FrameGrabber & fg, uint8_t input);
 
          /**
-           * Processes one frame of image data from Stonyman2 using analog-to-digital (ADC) 
-           * converter on the Stonyman2 (SPI bus).
-           *
-           * @param fg FrameGrabber object
-           * @param bounds ImageBounds object
-           * @param input input pin number
+           * Digital (SPI) version of above
            */
-          void processFrameDigital(FrameGrabber & fg, ImageBounds & bounds, uint8_t input) { process_frame(fg, bounds, input, true); }
+         void processFrameDigital(FrameGrabber & fg, uint8_t input, ImageBounds & bounds);
+         void processFrameDigital(FrameGrabber & fg, uint8_t input);
 
     private:
 
@@ -496,52 +414,17 @@ class Stonyman
         uint8_t _incv;
         uint8_t _inphi;
 
-        void process_frame(FrameGrabber & grabber, ImageBounds & bounds, uint8_t input, bool use_digital);
+        ImageBounds fullbounds;
 
-        void get_image(
-                uint16_t *img, 
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowstride, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colstride, 
-                uint8_t input,
-                bool use_digital);
+        void get_image(uint16_t *img, uint8_t input, bool use_digital, ImageBounds & bounds);
 
-        void get_image_row_sum(
-                uint16_t *img, 
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowstride, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colstride, 
-                uint8_t input, 
-                bool use_digital);
+        void get_row_sum(uint16_t *img, uint8_t input, bool use_digital, ImageBounds & bounds);
 
-        void get_image_col_sum(
-                uint16_t *img, 
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowstride, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colstride, 
-                uint8_t input, 
-                bool use_digital);
+        void get_col_sum(uint16_t *img, uint8_t input, bool use_digital, ImageBounds & bounds);
 
-        void find_max(
-                uint8_t rowstart, 
-                uint8_t numrows, 
-                uint8_t rowstride, 
-                uint8_t colstart, 
-                uint8_t numcols, 
-                uint8_t colstride, 
-                uint8_t input,
-                uint8_t *maxrow, 
-                uint8_t *maxcol,
-                bool use_digital);
+        void find_max(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, bool use_digital, ImageBounds & bounds);
+
+        void process_frame(FrameGrabber & grabber, uint8_t input, bool use_digital, ImageBounds & bounds);
 
         static void init_pin(uint8_t pin);
 

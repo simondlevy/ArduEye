@@ -153,9 +153,12 @@ static void processCommands()
 
                 // calculate FPN mask and apply it to current image
             case 'f': 
-                stonyman.getImageAnalog(current_img,sr,row,skiprow,sc,col,skipcol,inputPin);
-                stonyman.calcMask(current_img,row*col,mask,&mask_base);
-                Serial.println("FPN Mask done");  
+                {
+                    ImageBounds bounds(sr,row,skiprow,sc,col,skipcol);
+                    stonyman.getImageAnalog(current_img, inputPin, bounds);
+                    stonyman.calcMask(current_img,row*col,mask,&mask_base);
+                    Serial.println("FPN Mask done");  
+                }
                 break;   
 
                 //optical flow type  
@@ -209,7 +212,8 @@ void loop()
     processCommands();
 
     //get an image from the stonyman chip
-    stonyman.getImageAnalog(current_img,sr,row,skiprow,sc,col,skipcol,inputPin);
+    ImageBounds bounds(sr,row,skiprow,sc,col,skipcol);
+    stonyman.getImageAnalog(current_img, inputPin, bounds);
 
     //apply an FPNMask to the image.  This needs to be calculated with the "f" command
     //while the vision chip is covered with a white sheet of paper to expose it to 

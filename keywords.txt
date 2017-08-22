@@ -8,6 +8,8 @@
 
 GUIClient			KEYWORD1
 Stonyman			KEYWORD1
+FrameGrabber			KEYWORD1
+ImageBounds			KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -63,6 +65,13 @@ ofoIIA_Plus_2D			KEYWORD2
 ofoLK_Plus_2D			KEYWORD2
 ofoIIA_Square_2D		KEYWORD2
 ofoLK_Square_2D			KEYWORD2
+
+# FrameGrabber
+preProcess			KEYWORD2
+handlePixel			KEYWORD2
+handleRowStart			KEYWORD2
+handleRowEnd			KEYWORD2
+postProcess			KEYWORD2
 
 #######################################
 # Constants (LITERAL1)

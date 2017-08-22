@@ -281,108 +281,105 @@ void Stonyman::applyMask(uint16_t *img, uint16_t size, uint8_t *mask, uint16_t m
     }
 }
 
-void Stonyman::getImageAnalog(uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colstride, 
-        uint8_t input) 
+void Stonyman::getImageAnalog(uint16_t *img, uint8_t input, ImageBounds & bounds) 
 {
-    get_image(img, rowstart, numrows, rowstride, colstart, numcols, colstride, input, false);
+    get_image(img, input, false, bounds);
 }
 
-void Stonyman::getImageDigital(uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colstride, 
-        uint8_t input) 
+void Stonyman::getImageAnalog(uint16_t *img, uint8_t input) 
 {
-    get_image(img, rowstart, numrows, rowstride, colstart, numcols, colstride, input, true);
+    get_image(img, input, false, fullbounds);
 }
 
-void Stonyman::getImageRowSumAnalog(
-        uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colstride, 
-        uint8_t input)
+void Stonyman::getImageDigital(uint16_t *img, uint8_t input, ImageBounds & bounds) 
 {
-    get_image_row_sum(img, rowstart, numrows, rowstride, colstart, numcols, colstride, input, false);
+    get_image(img, input, true, bounds);
 }
 
-void Stonyman::getImageRowSumDigital(
-        uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colstride, 
-        uint8_t input)
+void Stonyman::getImageDigital(uint16_t *img, uint8_t input) 
 {
-    get_image_row_sum(img, rowstart, numrows, rowstride, colstart, numcols, colstride, input, true);
+    get_image(img, input, true, fullbounds);
 }
 
-void Stonyman::getImageColSumAnalog(
-        uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colstride, 
-        uint8_t input) 
+void Stonyman::getRowSumAnalog(uint16_t *img, uint8_t input, ImageBounds & bounds)
 {
-    get_image_col_sum(img, rowstart, numrows, rowstride, colstart, numcols, colstride, input, false);
+    get_row_sum(img, input, false, bounds);
 }
 
-void Stonyman::getImageColSumDigital(
-        uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colstride, 
-        uint8_t input) 
+void Stonyman::getRowSumAnalog(uint16_t *img, uint8_t input)
 {
-    get_image_col_sum(img, rowstart, numrows, rowstride, colstart, numcols, colstride, input, true);
-}
-    
-void Stonyman::findMaxAnalog(
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols,
-        uint8_t colstride, 
-        uint8_t input,
-        uint8_t *maxrow, 
-        uint8_t *maxcol)
-{
-    find_max(rowstart, numrows, rowstride, colstart, numcols, colstride, input, maxrow, maxcol, false);
+    get_row_sum(img, input, false, fullbounds);
 }
 
-void Stonyman::findMaxDigital(
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols,
-        uint8_t colstride, 
-        uint8_t input,
-        uint8_t *maxrow, 
-        uint8_t *maxcol)
+void Stonyman::getRowSumDigital(uint16_t *img, uint8_t input, ImageBounds & bounds)
 {
-    find_max(rowstart, numrows, rowstride, colstart, numcols, colstride, input, maxrow, maxcol, true);
+    get_row_sum(img, input, true, bounds);
+}
+
+void Stonyman::getRowSumDigital(uint16_t *img, uint8_t input)
+{
+    get_row_sum(img, input, true, fullbounds);
+}
+
+void Stonyman::getColSumAnalog(uint16_t *img, uint8_t input, ImageBounds & bounds)
+{
+    get_col_sum(img, input, false, bounds);
+}
+
+void Stonyman::getColSumAnalog(uint16_t *img, uint8_t input)
+{
+    get_col_sum(img, input, false, fullbounds);
+}
+
+void Stonyman::getColSumDigital(uint16_t *img, uint8_t input, ImageBounds & bounds)
+{
+    get_col_sum(img, input, true, bounds);
+}
+
+void Stonyman::getColSumDigital(uint16_t *img, uint8_t input)
+{
+    get_col_sum(img, input, true, fullbounds);
+}
+
+void Stonyman::Stonyman::findMaxAnalog(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, ImageBounds & bounds)
+{
+    find_max(input, maxrow, maxcol, false, bounds);
+}
+
+void Stonyman::findMaxAnalog(uint8_t input, uint8_t *maxrow, uint8_t *maxcol)
+{
+    find_max(input, maxrow, maxcol, false, fullbounds);
+}
+
+void Stonyman::findMaxDigital(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, ImageBounds & bounds)
+{
+    find_max(input, maxrow, maxcol, true, bounds);
+}
+
+void Stonyman::findMaxDigital(uint8_t input, uint8_t *maxrow, uint8_t *maxcol)
+{
+    find_max(input, maxrow, maxcol, true, fullbounds);
+}
+
+void Stonyman::processFrameAnalog(FrameGrabber & fg, uint8_t input, ImageBounds & bounds)
+{
+    process_frame(fg, input, false, bounds);
+}
+
+void Stonyman::processFrameAnalog(FrameGrabber & fg, uint8_t input)
+{
+    process_frame(fg, input, false, fullbounds);
+}
+
+
+void Stonyman::processFrameDigital(FrameGrabber & fg, uint8_t input, ImageBounds & bounds)
+{
+    process_frame(fg, input, true, bounds);
+}
+
+void Stonyman::processFrameDigital(FrameGrabber & fg, uint8_t input)
+{
+    process_frame(fg, input, true, fullbounds);
 }
 
 /*********************************************************************/
@@ -420,24 +417,14 @@ class ArrayFrameGrabber : protected FrameGrabber {
     }
 };
 
-void Stonyman::get_image(
-        uint16_t * img,
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colstride, 
-        uint8_t input,
-        bool use_digital)
+void Stonyman::get_image(uint16_t * img, uint8_t input, bool use_digital, ImageBounds & bounds)
 {
-    ImageBounds bds(rowstart, numrows, rowstride, colstart, numcols, colstride);
     ArrayFrameGrabber fg(img);
-    process_frame(fg, bds, input, use_digital);
+    process_frame(fg, input, use_digital, bounds);
 }
 
 
-void Stonyman::process_frame(FrameGrabber & grabber, ImageBounds & bounds, uint8_t input, bool use_digital)
+void Stonyman::process_frame(FrameGrabber & grabber, uint8_t input, bool use_digital, ImageBounds & bounds)
 {
     (void)use_digital;
 
@@ -519,21 +506,10 @@ class MaxFrameGrabber : protected FrameGrabber {
 };
 
 
-void Stonyman::find_max(
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols,
-        uint8_t colstride, 
-        uint8_t input,
-        uint8_t *maxrow, 
-        uint8_t *maxcol,
-        bool use_digital)
+void Stonyman::find_max(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, bool use_digital, ImageBounds & bounds)
 {
     MaxFrameGrabber fg;
-    ImageBounds bds(rowstart, numrows, rowstride, colstart, numcols, colstride);
-    process_frame(fg, bds, input, use_digital);
+    process_frame(fg, input, use_digital, bounds);
     *maxrow = fg.bestrow;
     *maxcol = fg.bestcol;
 }
@@ -576,32 +552,13 @@ class RowSumFrameGrabber : protected FrameGrabber {
 };
 
 
-void Stonyman::get_image_row_sum(
-        uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colstride, 
-        uint8_t input,
-        bool use_digital) 
+void Stonyman::get_row_sum(uint16_t *img, uint8_t input, bool use_digital, ImageBounds & bounds) 
 {
     RowSumFrameGrabber fg(img);
-    ImageBounds bds(rowstart, numrows, rowstride, colstart, numcols, colstride);
-    process_frame(fg, bds, input, use_digital);
+    process_frame(fg, input, use_digital, bounds);
 }
 
-void Stonyman::get_image_col_sum(
-        uint16_t *img, 
-        uint8_t rowstart, 
-        uint8_t numrows, 
-        uint8_t rowstride, 
-        uint8_t colstart, 
-        uint8_t numcols, 
-        uint8_t colstride, 
-        uint8_t input,
-        bool use_digital) 
+void Stonyman::get_col_sum(uint16_t *img, uint8_t input, bool use_digital, ImageBounds & bounds) 
 {
     (void)use_digital;
 
@@ -609,18 +566,18 @@ void Stonyman::get_image_col_sum(
     uint16_t total=0;
 
     // Go to first col (NB: columns are outer loop)
-    set_pointer_value(SMH_SYS_COLSEL,colstart);
+    set_pointer_value(SMH_SYS_COLSEL,bounds._colstart);
 
     // Loop through all cols
-    for (uint8_t col=0; col<numcols; ++col) {
+    for (uint8_t col=bounds._colstart; col<bounds._numcols; col+=bounds._colstride) {
 
         // Go to first row
-        set_pointer_value(SMH_SYS_ROWSEL,rowstart);
+        set_pointer_value(SMH_SYS_ROWSEL,bounds._rowstart);
 
         total=0;
 
         // Loop through all rows
-        for (uint8_t row=0; row<numrows; ++row) {
+        for (uint8_t row=bounds._rowstart; row<bounds._numrows; row+=bounds._rowstride) {
 
             // settling delay
             delayMicroseconds(1);
@@ -635,13 +592,13 @@ void Stonyman::get_image_col_sum(
             uint16_t val = analogRead(input); // acquire pixel
 
             total+=val;	//sum value along column
-            inc_value(rowstride); // go to next row
+            inc_value(bounds._rowstride); // go to next row
         }
 
         *pimg++ = total>>4; // store pixel and advance pointer
 
         set_pointer(SMH_SYS_COLSEL);
-        inc_value(colstride); // go to next col
+        inc_value(bounds._colstride); // go to next col
     }
 }
 

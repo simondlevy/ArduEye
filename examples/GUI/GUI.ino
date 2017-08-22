@@ -140,9 +140,12 @@ void processCommands()
 
                 // calculate FPN mask and apply it to current image
             case 'f': 
-                stonyman.getImageAnalog(img,sr,row,skiprow,sc,col,skipcol,input);
-                stonyman.calcMask(img,row*col,mask,&mask_base);
-                Serial.println("FPN Mask done");  
+                {
+                    ImageBounds bounds(sr,row,skiprow,sc,col,skipcol);
+                    stonyman.getImageAnalog(img, input, bounds);
+                    stonyman.calcMask(img,row*col,mask,&mask_base);
+                    Serial.println("FPN Mask done");  
+                }
                 break;   
 
                 //change chip select
@@ -189,12 +192,15 @@ void loop()
     //process commands from serial (should be performed once every execution of loop())
     processCommands();
 
+    //set up image bounds for this iteration
+    ImageBounds bounds(sr,row,skiprow,sc,col,skipcol);
+
     //get an image from the stonyman chip
-    stonyman.getImageAnalog(img,sr,row,skiprow,sc,col,skipcol,input);
+    stonyman.getImageAnalog(img, input, bounds);
 
     //find the maximum value.  This actually takes an image a second time, so
     //to speed up this loop you should comment this out
-    stonyman.findMaxAnalog(sr,row,skiprow,sc,col,skipcol,input,&row_max,&col_max);
+    stonyman.findMaxAnalog(input, &row_max, &col_max, bounds);
 
     //apply an FPNMask to the image.  This needs to be calculated with the "f" command
     //while the vision chip is covered with a white sheet of paper to expose it to 
