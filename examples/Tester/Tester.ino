@@ -132,7 +132,7 @@ class MatlabFrameGrabber : public FrameGrabber {
             Serial.print(" ");
         }
 
-        virtual void handleRowEnd(void) override 
+        virtual void handleVectorEnd(void) override 
         {
             Serial.println(" ");
         }
@@ -255,7 +255,7 @@ static void processCommands()
             case 'f': 
                 {
                     ImageBounds bounds(sr,row,skiprow,sc,col,skipcol);
-                    stonyman.getImageAnalog(img, input, bounds);
+                    stonyman.getImage(img, input, bounds);
                     stonyman.calcMask(img,row*col,mask,&mask_base);
                     Serial.println("FPN Mask done");  
                 }
@@ -272,13 +272,13 @@ static void processCommands()
             case 'm':
                 {
                     ImageBounds bounds(sr,row,skiprow,sc,col,skipcol);
-                    stonyman.processFrameAnalog(fg, input, bounds);
+                    stonyman.processFrame(fg, input, bounds);
                 }
                 break;
 
                 //print the entire chip over Serial in Matlab format
             case 'M':  
-                    stonyman.processFrameAnalog(fg, input);
+                    stonyman.processFrame(fg, input);
                 break;
 
                 //change NBIAS
@@ -381,11 +381,11 @@ void loop()
     ImageBounds bounds(sr,row,skiprow,sc,col,skipcol);
 
     //get an image from the stonyman chip
-    stonyman.getImageAnalog(img, input, bounds);
+    stonyman.getImage(img, input, bounds);
 
     //find the maximum value.  This actually takes an image a second time, so
     //to speed up this loop you should comment this out
-    stonyman.findMaxAnalog(input, &row_max, &col_max, bounds);
+    stonyman.findMax(input, &row_max, &col_max, bounds);
 
     //apply an FPNMask to the image.  This needs to be calculated with the "f" command
     //while the vision chip is covered with a white sheet of paper to expose it to 

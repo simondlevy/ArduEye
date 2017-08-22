@@ -155,7 +155,7 @@ static void processCommands()
             case 'f': 
                 {
                     ImageBounds bounds(sr,row,skiprow,sc,col,skipcol);
-                    stonyman.getImageAnalog(current_img, inputPin, bounds);
+                    stonyman.getImage(current_img, inputPin, bounds);
                     stonyman.calcMask(current_img,row*col,mask,&mask_base);
                     Serial.println("FPN Mask done");  
                 }
@@ -207,13 +207,12 @@ void setup()
 
 void loop() 
 {
-
     //process commands from serial (should be performed once every execution of loop())
     processCommands();
 
     //get an image from the stonyman chip
     ImageBounds bounds(sr,row,skiprow,sc,col,skipcol);
-    stonyman.getImageAnalog(current_img, inputPin, bounds);
+    stonyman.getImage(current_img, inputPin, bounds);
 
     //apply an FPNMask to the image.  This needs to be calculated with the "f" command
     //while the vision chip is covered with a white sheet of paper to expose it to 

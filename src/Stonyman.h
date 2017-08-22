@@ -71,7 +71,7 @@ static const uint16_t MAX_PIXELS  = MAX_ROWS * MAX_COLS;
 
 /**
  * A helper class for handling frame-grabbing events.
- * Useful in typical applications where outer loop is rows, inner is columns.
+ * Works row-wise or column-wise, depending on what methods you override.
  * Methods are called automatically by Stonyman object.
  */
 class FrameGrabber {
@@ -94,14 +94,14 @@ class FrameGrabber {
     }
 
     /**
-     * Does something useful at the start of a row.
+     * Does something useful at the start of a row or column.
      */
-    virtual void handleRowStart(void) { }
+    virtual void handleVectorStart(void) { }
 
     /**
-     * Does something useful at the end of a row.
+     * Does something useful at the end of a row or coumn.
      */
-    virtual void handleRowEnd(void) { }
+    virtual void handleVectorEnd(void) { }
 
     /**
      * Does something useful after frame is read.
@@ -156,7 +156,7 @@ class Stonyman
     public:
 
         /**
-         * Creates a Stonyman object using four digital input signals to the chip.
+         * Creates a Stonyman object using four bool digital= input signals to the chip.
          * @param resp pin for RESP signal
          * @param incp pin for INCP signal
          * @param resv pin for RESV signal
@@ -279,24 +279,19 @@ class Stonyman
          * @param img (output) pointer to image array, an array of signed uint16_ts
          * @param input which analog input pin to use
          * @param bounds optional ImageBounds object
+         * @param optional bool digital= flag for using SPI (default=false, use Arduino ADC)
          * 
          * Examples:
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;getImageAnalog(img, 0, ImageBounds(16,8,1,24,8,1)): 
+         * &nbsp;&nbsp;&nbsp;&nbsp;getImage(img, 0, ImageBounds(16,8,1,24,8,1)): 
          * Grab an 8x8 window of pixels at raw resolution starting at row 
          * 16, column 24, from chip using onboard ADC at input 0
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;getImageAnalog(img, 2);
+         * &nbsp;&nbsp;&nbsp;&nbsp;getImage(img, 2);
          * Grab entire Stonyman chip when using 8x8 binning. Grab from input 2.
          */
-        void getImageAnalog(uint16_t *img, uint8_t input, ImageBounds & bounds);
-        void getImageAnalog(uint16_t *img, uint8_t input);
-
-        /**
-          * Digital (SPI) version of above.
-          */ 
-        void getImageDigital(uint16_t *img, uint8_t input, ImageBounds & bounds);
-        void getImageDigital(uint16_t *img, uint8_t input);
+        void getImage(uint16_t *img, uint8_t input, ImageBounds & bounds, bool digital=false);
+        void getImage(uint16_t *img, uint8_t input, bool digital=false);
 
         /**
          * Acquires a box section of a Stonyman or Hawksbill 
@@ -309,6 +304,7 @@ class Stonyman
          * @param img (output): pointer to image array, an array of signed uint16_ts
          * @param input which analog input pin to use
          * @param bounds optional ImageBounds object
+         * @param optional bool digital= flag for using SPI (default=false, use Arduino ADC)
          *
          * Examples:
          *
@@ -319,15 +315,9 @@ class Stonyman
          * &nbsp;&nbsp;&nbsp;&nbsp;getImage(img,2, ImageBounds(0,14,8,0,14,8)): 
          * Grab entire Stonyman chip when using 8x8 binning. Grab from input 2.
          */
-        void getRowSumAnalog(uint16_t *img, uint8_t input, ImageBounds & bounds);
-        void getRowSumAnalog(uint16_t *img, uint8_t input);
+        void getRowSum(uint16_t *img, uint8_t input, ImageBounds & bounds, bool digital=false);
+        void getRowSum(uint16_t *img, uint8_t input, bool digital=false);
 
-        /**
-          * Digital (SPI) version of above.
-          * @param input pin for chip-select signal
-          */ 
-        void getRowSumDigital(uint16_t *img, uint8_t input, ImageBounds & bounds);
-        void getRowSumDigital(uint16_t *img, uint8_t input);
 
         /**
          * Acquires a box section of a Stonyman or Hawksbill 
@@ -339,7 +329,8 @@ class Stonyman
          *
          * @param img (output) pointer to image array, an array of signed uint16_ts
          * @param input which analog input pin to use
-         * @param bounds optional Bounds object
+         * @param bounds optional ImageBounds object
+         * @param optional bool digital= flag for using SPI (default=false, use Arduino ADC)
          * 
          * Examples:
          *
@@ -350,15 +341,9 @@ class Stonyman
          * &nbsp;&nbsp;&nbsp;&nbsp;get(img, 2, ImageBounds(0,14,8,0,14,8,2)): 
          * Grab entire Stonyman chip when using 8x8 binning. Grab from input 2.
          */
-        void getColSumAnalog(uint16_t *img, uint8_t input, ImageBounds & bounds);
-        void getColSumAnalog(uint16_t *img, uint8_t input);
+        void getColSum(uint16_t *img, uint8_t input, ImageBounds & bounds, bool digital=false);
+        void getColSum(uint16_t *img, uint8_t input, bool digital=false);
 
-        /**
-          * Digital (SPI) version of above.
-          * @param input pin for chip-select signal
-          */ 
-        void getColSumDigital(uint16_t *img, uint8_t input, ImageBounds & bounds);
-        void getColSumDigital(uint16_t *img, uint8_t input);
 
         /**
          * Searches over a block section of a Stonyman chip
@@ -369,38 +354,36 @@ class Stonyman
          * @param input pin for chip-select signal
          * @param maxrow gets row index of brightest pixel
          * @param maxcol gets column index of brightest pixel
+         * @param bounds optional ImageBounds object
+         * @param optional bool digital= flag for using SPI (default=false, use Arduino ADC)
          *
          * Example:
          *
-         * &nbsp;&nbsp;&nbsp;&nbsp;findMaxAnalog(0, &rowineer, & colwinner, (8,104,1,8,104,1)):
+         * &nbsp;&nbsp;&nbsp;&nbsp;findMax(0, &rowineer, & colwinner, (8,104,1,8,104,1)):
          * Search rows 8...104 and columns 8...104 for brightest pixel, using analog input 0
          */
-        void findMaxAnalog(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, ImageBounds & bounds);
-        void findMaxAnalog(uint8_t input, uint8_t *maxrow, uint8_t *maxcol);
-
-        /**
-          * Digital (SPI) version of above.
-          * @param input pin for chip-select signal
-          */ 
-        void findMaxDigital(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, ImageBounds & bounds);
-        void findMaxDigital(uint8_t input, uint8_t *maxrow, uint8_t *maxcol);
+        void findMax(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, bool digital=false);
+        void findMax(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, ImageBounds & bounds, bool digital=false);
 
          /**
-           * Processes one frame of image data from Stonyman2 using analog-to-digital (ADC) 
-           * converter on the Arduino.
+           * Processes one frame of image data from Stonyman2 in row-wise order.
            *
            * @param fg FrameGrabber object
            * @param input input pin number
            * @param bounds ImageBounds object
            */
-         void processFrameAnalog(FrameGrabber & fg, uint8_t input, ImageBounds & bounds);
-         void processFrameAnalog(FrameGrabber & fg, uint8_t input);
+         void processFrame(FrameGrabber & fg, uint8_t input, ImageBounds & bounds, bool digital=false);
+         void processFrame(FrameGrabber & fg, uint8_t input, bool digital=false);
 
          /**
-           * Digital (SPI) version of above
+           * Processes one frame of image data from Stonyman2 in column-wise order.
+           *
+           * @param fg FrameGrabber object
+           * @param input input pin number
+           * @param bounds ImageBounds object
            */
-         void processFrameDigital(FrameGrabber & fg, uint8_t input, ImageBounds & bounds);
-         void processFrameDigital(FrameGrabber & fg, uint8_t input);
+         void processFrameVertical(FrameGrabber & fg, uint8_t input, ImageBounds & bounds, bool digital=false);
+         void processFrameVertical(FrameGrabber & fg, uint8_t input, bool digital=false);
 
     private:
 
@@ -415,16 +398,6 @@ class Stonyman
         uint8_t _inphi;
 
         ImageBounds fullbounds;
-
-        void get_image(uint16_t *img, uint8_t input, bool use_digital, ImageBounds & bounds);
-
-        void get_row_sum(uint16_t *img, uint8_t input, bool use_digital, ImageBounds & bounds);
-
-        void get_col_sum(uint16_t *img, uint8_t input, bool use_digital, ImageBounds & bounds);
-
-        void find_max(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, bool use_digital, ImageBounds & bounds);
-
-        void process_frame(FrameGrabber & grabber, uint8_t input, bool use_digital, ImageBounds & bounds);
 
         static void init_pin(uint8_t pin);
 
