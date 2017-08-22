@@ -254,9 +254,9 @@ class Stonyman
            * @param fg FrameGrabber object
            * @param input input pin number
            * @param bounds ImageBounds object
+           * @param digital optional flag for using SPI output
            */
          void processFrame(FrameGrabber & fg, uint8_t input, ImageBounds & bounds, bool digital=false);
-         void processFrame(FrameGrabber & fg, uint8_t input, bool digital=false);
 
          /**
            * Processes one frame of image data from Stonyman2 in column-wise order.
@@ -264,9 +264,9 @@ class Stonyman
            * @param fg FrameGrabber object
            * @param input input pin number
            * @param bounds ImageBounds object
+           * @param digital optional flag for using SPI output
            */
          void processFrameVertical(FrameGrabber & fg, uint8_t input, ImageBounds & bounds, bool digital=false);
-         void processFrameVertical(FrameGrabber & fg, uint8_t input, bool digital=false);
 
     private:
 

@@ -297,11 +297,6 @@ void Stonyman::processFrame(FrameGrabber & grabber, uint8_t input, ImageBounds &
     grabber.postProcess();
 }
 
-void Stonyman::processFrame(FrameGrabber & grabber, uint8_t input, bool digital)
-{
-    processFrame(grabber, input, FULLBOUNDS, digital);
-}
-
 void Stonyman::processFrameVertical(FrameGrabber & grabber, uint8_t input, ImageBounds & bounds, bool digital)
 {
     (void)digital;
@@ -349,10 +344,3 @@ void Stonyman::processFrameVertical(FrameGrabber & grabber, uint8_t input, Image
 
     grabber.postProcess();
 }
-
-void Stonyman::processFrameVertical(FrameGrabber & grabber, uint8_t input, bool digital)
-{
-    processFrameVertical(grabber, input, FULLBOUNDS, digital);
-}
-
-
