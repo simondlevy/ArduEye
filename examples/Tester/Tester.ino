@@ -44,22 +44,14 @@
    The views and conclusions contained in the software and documentation are 
    those of the authors and should not be interpreted as representing official 
    policies, either expressed or implied, of Centeye, Inc.
-   ===============================================================================
- */
-
-/*
-   Note on image arrays: To save space and speed up operations, we store all images,
-   whether 1D or 2D, in a 1D array. The pixels are stored row-wise. So suppose
-   array A holds a 16x16 image. Then values A[0] through A[15] store the first row
-   of pixel values, values A[16] through A[31] the second row of pixel values, and
-   so on.
  */
 
 //=============================================================================
 // INCLUDE FILES. The top two files are part of the ArduEye library and should
 // be included in the Arduino "libraries" folder.
 
-#include <Stonyman.h>       // Stonyman/Hawksbill vision chip library
+#include <Stonyman.h>       // Stonyman Hawksbill vision chip library
+#include <StonymanUtils.h>  // Frame-grabbing utilities for Stonyman
 #include <ImageUtils.h>     // Image utiltities
 #include <GUIClient.h>      // ArduEye processing GUI interface
 
@@ -255,7 +247,7 @@ static void processCommands()
             case 'f': 
                 {
                     ImageBounds bounds(sr,row,skiprow,sc,col,skipcol);
-                    stonyman.getImage(img, input, bounds);
+                    stonymanGetImage(stonyman, img, input, bounds);
                     imgCalcMask(img,row*col,mask,&mask_base);
                     Serial.println("FPN Mask done");  
                 }
@@ -381,11 +373,11 @@ void loop()
     ImageBounds bounds(sr,row,skiprow,sc,col,skipcol);
 
     //get an image from the stonyman chip
-    stonyman.getImage(img, input, bounds);
+    stonymanGetImage(stonyman, img, input, bounds);
 
     //find the maximum value.  This actually takes an image a second time, so
     //to speed up this loop you should comment this out
-    stonyman.findMax(input, &row_max, &col_max, bounds);
+    stonymanFindMax(stonyman, input, &row_max, &col_max, bounds);
 
     //apply an FPNMask to the image.  This needs to be calculated with the "f" command
     //while the vision chip is covered with a white sheet of paper to expose it to 

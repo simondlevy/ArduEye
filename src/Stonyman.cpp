@@ -1,7 +1,5 @@
 /*
-Stonyman.cpp Library for the Stonyman2 Centeye Vision Chip
-
-Basic functions to operate Stonyman with Arduino boards
+Stonyman.cpp Core library for the Stonyman2 Centeye Vision Chip
 
 See Stonyman.h for documentation
 
@@ -258,147 +256,6 @@ void Stonyman::setBinning(uint8_t hbin,uint8_t vbin)
     set_pointer_value(SMH_SYS_VSW,vsw);
 }
 
-//helper class for grabbing images and storing them in an array
-class ArrayFrameGrabber : protected FrameGrabber {
-
-    friend class Stonyman;
-
-    private:
-
-    uint16_t * _img;
-    uint16_t * _pimg;
-
-    protected:
-
-    ArrayFrameGrabber(uint16_t * img) 
-    {
-        _img = img;
-    }
-
-    virtual void preProcess(void) override  
-    {
-        _pimg = _img;
-    }
-
-    virtual void handlePixel(uint8_t row, uint8_t col, uint16_t pixel, bool use_amp) override 
-    {
-        (void)row;
-        (void)col;
-        (void)use_amp;
-
-        *_pimg++ = pixel;
-    }
-};
-
-void Stonyman::getImage(uint16_t *img, uint8_t input, ImageBounds & bounds, bool digital) 
-{
-    ArrayFrameGrabber fg(img);
-    processFrame(fg, input, bounds, digital);
-}
-
-void Stonyman::getImage(uint16_t *img, uint8_t input, bool digital) 
-{
-    getImage(img, input, fullbounds, digital);
-}
-
-// helper class for computing row sums
-class SumFrameGrabber : protected FrameGrabber {
-
-    friend class Stonyman;
-
-    private:
-
-    uint16_t * pimg;
-    uint16_t total;
-
-    protected:
-
-    SumFrameGrabber(uint16_t * img) 
-    {
-        pimg = img;
-    }
-
-    virtual void handleVectorStart(void) 
-    { 
-        total = 0;
-    }
-
-    virtual void handlePixel(uint8_t row, uint8_t col, uint16_t pixel, bool use_amp) 
-    { 
-        (void)row; 
-        (void)col; 
-        (void)use_amp;
-
-        total += pixel;
-    }
-
-    virtual void handleVectorEnd(void) 
-    {
-        *pimg++ = total>>4; // store pixel divide to avoid overflow, then advance pointer
-    }
-};
-
-
-void Stonyman::getRowSum(uint16_t *img, uint8_t input, ImageBounds & bounds, bool digital)
-{
-    SumFrameGrabber fg(img);
-    processFrame(fg, input, bounds, digital);
-}
-
-void Stonyman::getColSum(uint16_t *img, uint8_t input, ImageBounds & bounds, bool digital)
-{
-    SumFrameGrabber fg(img);
-    processFrameVertical(fg, input, bounds, digital);
-}
-
-//helper class for finding maximum pixel values in image
-class MaxFrameGrabber : protected FrameGrabber {
-
-    friend class Stonyman;
-
-    protected:
-
-    uint16_t minval;
-    uint16_t maxval;
-    uint16_t bestrow;
-    uint16_t bestcol;
-
-    virtual void preProcess(void) override
-    {
-        maxval=5000;
-        minval=0;
-        bestrow=0;
-        bestcol=0;
-    }
-
-    virtual void handlePixel(uint8_t row, uint8_t col, uint16_t pixel, bool use_amp) override 
-    {
-        if(use_amp)	{ //amplifier is inverted
-            if (pixel>minval) { 	//find max val (bright)
-                bestrow=row;
-                bestcol=col;
-                minval=pixel;
-            }
-        }
-        else {		//unamplified
-            if (pixel<maxval) {	//find min val (bright)
-                bestrow=row;
-                bestcol=col;
-                maxval=pixel;
-            }
-        }
-    }
-};
-
-
-void Stonyman::Stonyman::findMax(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, ImageBounds & bounds, bool digital)
-{
-    MaxFrameGrabber fg;
-    processFrame(fg, input, bounds, digital);
-    *maxrow = fg.bestrow;
-    *maxcol = fg.bestcol;
-}
-
 void Stonyman::processFrame(FrameGrabber & grabber, uint8_t input, ImageBounds & bounds, bool digital)
 {
     (void)digital;
@@ -442,7 +299,7 @@ void Stonyman::processFrame(FrameGrabber & grabber, uint8_t input, ImageBounds &
 
 void Stonyman::processFrame(FrameGrabber & grabber, uint8_t input, bool digital)
 {
-    processFrame(grabber, input, fullbounds, digital);
+    processFrame(grabber, input, FULLBOUNDS, digital);
 }
 
 void Stonyman::processFrameVertical(FrameGrabber & grabber, uint8_t input, ImageBounds & bounds, bool digital)
@@ -495,7 +352,7 @@ void Stonyman::processFrameVertical(FrameGrabber & grabber, uint8_t input, Image
 
 void Stonyman::processFrameVertical(FrameGrabber & grabber, uint8_t input, bool digital)
 {
-    processFrameVertical(grabber, input, fullbounds, digital);
+    processFrameVertical(grabber, input, FULLBOUNDS, digital);
 }
 
 

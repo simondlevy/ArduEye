@@ -1,5 +1,5 @@
 /*
-Stonyman.h Library for the Stonyman Centeye Vision Chip
+Stonyman.h Core library for the Stonyman Centeye Vision Chip
 
 Copyright (c) 2012 Centeye, Inc. 
 All rights reserved.
@@ -156,6 +156,11 @@ class Stonyman
     public:
 
         /**
+          * An ImageBounds object representing the full 112x112 image.
+          */
+        ImageBounds FULLBOUNDS;
+
+        /**
          * Creates a Stonyman object using four bool digital= input signals to the chip.
          * @param resp pin for RESP signal
          * @param incp pin for INCP signal
@@ -243,102 +248,6 @@ class Stonyman
          */
         void setBiases(uint8_t vref, uint8_t nbias, uint8_t aobias);
 
-        /**
-         * Acquires a box section of an image
-         * from the analog output, and and saves to image array img.  Note 
-         * that images are read out in 
-         * raster manner (e.g. row wise) and stored as such in a 1D array. 
-         * In this case the pointer img points to the output array. 
-         *
-         * @param img (output) pointer to image array, an array of signed uint16_ts
-         * @param input which analog input pin to use
-         * @param bounds optional ImageBounds object
-         * @param optional bool digital= flag for using SPI (default=false, use Arduino ADC)
-         * 
-         * Examples:
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;getImage(img, 0, ImageBounds(16,8,1,24,8,1)): 
-         * Grab an 8x8 window of pixels at raw resolution starting at row 
-         * 16, column 24, from chip using onboard ADC at input 0
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;getImage(img, 2);
-         * Grab entire Stonyman chip when using 8x8 binning. Grab from input 2.
-         */
-        void getImage(uint16_t *img, uint8_t input, ImageBounds & bounds, bool digital=false);
-        void getImage(uint16_t *img, uint8_t input, bool digital=false);
-
-        /**
-         * Acquires a box section of a Stonyman or Hawksbill 
-         * and saves to image array img.  However, each row of the image
-         * is summed and returned as a single value.
-         * Note that images are read out in 
-         * raster manner (e.g. row wise) and stored as such in a 1D array. 
-         * In this case the pointer img points to the output array. 
-         *
-         * @param img (output): pointer to image array, an array of signed uint16_ts
-         * @param input which analog input pin to use
-         * @param bounds optional ImageBounds object
-         * @param optional bool digital= flag for using SPI (default=false, use Arduino ADC)
-         *
-         * Examples:
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;getImage(img, 0, ImageBounds(16,8,1,24,8,1)): 
-         * Grab an 8x8 window of pixels at raw resolution starting at row 
-         * 16, column 24, from chip using onboard ADC at input 0
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;getImage(img,2, ImageBounds(0,14,8,0,14,8)): 
-         * Grab entire Stonyman chip when using 8x8 binning. Grab from input 2.
-         */
-        void getRowSum(uint16_t *img, uint8_t input, ImageBounds & bounds, bool digital=false);
-        void getRowSum(uint16_t *img, uint8_t input, bool digital=false);
-
-
-        /**
-         * Acquires a box section of a Stonyman or Hawksbill 
-         * and saves to image array img.  However, each col of the image
-         * is summed and returned as a single value.
-         * Note that images are read out in 
-         * raster manner (e.g. row wise) and stored as such in a 1D array. 
-         * In this case the pointer img points to the output array. 
-         *
-         * @param img (output) pointer to image array, an array of signed uint16_ts
-         * @param input which analog input pin to use
-         * @param bounds optional ImageBounds object
-         * @param optional bool digital= flag for using SPI (default=false, use Arduino ADC)
-         * 
-         * Examples:
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;get(img, 0, ImageBounds(16,8,1,24,8,1)): 
-         * Grab an 8x8 window of pixels at raw resolution starting at row 
-         * 16, column 24, from chip using onboard ADC at input 0
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;get(img, 2, ImageBounds(0,14,8,0,14,8,2)): 
-         * Grab entire Stonyman chip when using 8x8 binning. Grab from input 2.
-         */
-        void getColSum(uint16_t *img, uint8_t input, ImageBounds & bounds, bool digital=false);
-        void getColSum(uint16_t *img, uint8_t input, bool digital=false);
-
-
-        /**
-         * Searches over a block section of a Stonyman chip
-         * to find the brightest pixel. This function is intended to be used 
-         * for things like finding the location of a pinhole in response to 
-         * a bright light.
-         *
-         * @param input pin for chip-select signal
-         * @param maxrow gets row index of brightest pixel
-         * @param maxcol gets column index of brightest pixel
-         * @param bounds optional ImageBounds object
-         * @param optional bool digital= flag for using SPI (default=false, use Arduino ADC)
-         *
-         * Example:
-         *
-         * &nbsp;&nbsp;&nbsp;&nbsp;findMax(0, &rowineer, & colwinner, (8,104,1,8,104,1)):
-         * Search rows 8...104 and columns 8...104 for brightest pixel, using analog input 0
-         */
-        void findMax(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, bool digital=false);
-        void findMax(uint8_t input, uint8_t *maxrow, uint8_t *maxcol, ImageBounds & bounds, bool digital=false);
-
          /**
            * Processes one frame of image data from Stonyman2 in row-wise order.
            *
@@ -370,8 +279,6 @@ class Stonyman
         uint8_t _resv;
         uint8_t _incv;
         uint8_t _inphi;
-
-        ImageBounds fullbounds;
 
         static void init_pin(uint8_t pin);
 
