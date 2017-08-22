@@ -101,3 +101,14 @@ void stonymanGetColSum(Stonyman & stonyman, uint16_t *img, uint8_t input, bool d
 void stonymanFindMax(Stonyman & stonyman, uint8_t input, uint8_t *maxrow, uint8_t *maxcol, bool digital=false);
 void stonymanFindMax(Stonyman & stonyman, uint8_t input, uint8_t *maxrow, uint8_t *maxcol, ImageBounds & bounds, bool digital=false);
 
+/**
+ * Dumps Stonyman image to serial output in Matlab format.
+ *
+ * @param stonyman a Stonyman object whose begin() method has been called
+ * @param input pin for chip-select signal
+ * @param bounds optional ImageBounds object
+ * @param optional bool digital= flag for using SPI (default=false, use Arduino ADC)
+ */
+void stonymanDumpMatlab(Stonyman & stonyman, uint8_t input, bool digital=false);
+void stonymanDumpMatlab(Stonyman & stonyman, uint8_t input, ImageBounds & bounds, bool digital=false);
+

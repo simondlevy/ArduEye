@@ -30,6 +30,7 @@ policies, either expressed or implied, of Centeye, Inc.
 */
 
 #include <StonymanUtils.h>
+#include <Arduino.h>
 
 //helper class for grabbing images and storing them in an array
 class ArrayFrameGrabber : public FrameGrabber {
@@ -179,3 +180,48 @@ void stonymanFindMax(Stonyman & stonyman, uint8_t input, uint8_t *maxrow, uint8_
     *maxrow = fg.bestrow;
     *maxcol = fg.bestcol;
 }
+
+//helper class for generating Matlab-formatted output
+class MatlabFrameGrabber : public FrameGrabber {
+
+    friend class Stonyman;
+
+    protected:
+
+        virtual void preProcess(void) override  
+        {
+            Serial.println("Img = [");
+        }
+
+        virtual void handlePixel(uint8_t row, uint8_t col, uint16_t pixel, bool use_amp) override 
+        {
+            (void)row;
+            (void)col;
+            (void)use_amp;
+
+            Serial.print(pixel);
+            Serial.print(" ");
+        }
+
+        virtual void handleVectorEnd(void) override 
+        {
+            Serial.println(" ");
+        }
+
+        virtual void postProcess(void) override 
+        {
+            Serial.println("];");
+        }
+};
+
+void stonymanDumpMatlab(Stonyman & stonyman, uint8_t input, ImageBounds & bounds, bool digital) 
+{
+    MatlabFrameGrabber fg;
+    stonyman.processFrame(fg, input, bounds, digital);
+}
+
+void stonymanDumpMatlab(Stonyman & stonyman, uint8_t input, bool digital) 
+{
+    stonymanDumpMatlab(stonyman, input, stonyman.FULLBOUNDS, digital);
+}
+
