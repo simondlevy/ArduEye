@@ -24,14 +24,15 @@ setVref				KEYWORD2
 setNbias			KEYWORD2
 setAobias			KEYWORD2
 setBiasesVdd			KEYWORD2
-getImageAnalog			KEYWORD2
-getImageDigital			KEYWORD2
-getImageRowSumAnalog		KEYWORD2
-getImageRowSumDigital		KEYWORD2
-getImageColSumAnalog		KEYWORD2
-getImageColSumDigital		KEYWORD2
-findMaxAnalog			KEYWORD2
-findMaxDigital			KEYWORD2
+processFrame			KEYWORD2
+processFrameVertical		KEYWORD2
+
+# StonymanUtils
+stonymanGetImage		KEYWORD2
+stonymanGetRowSum		KEYWORD2
+stonymanGetColSum		KEYWORD2
+stonymanFindMax			KEYWORD2
+stonymanDumpMatlab		KEYWORD2
 
 # GUIClient
 start				KEYWORD2
@@ -69,8 +70,8 @@ ofoLK_Square_2D			KEYWORD2
 # FrameGrabber
 preProcess			KEYWORD2
 handlePixel			KEYWORD2
-handleRowStart			KEYWORD2
-handleRowEnd			KEYWORD2
+handleVectorStart		KEYWORD2
+handleVectorEnd			KEYWORD2
 postProcess			KEYWORD2
 
 #######################################
