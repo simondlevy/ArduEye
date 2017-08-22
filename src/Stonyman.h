@@ -244,32 +244,6 @@ class Stonyman
         void setBiases(uint8_t vref, uint8_t nbias, uint8_t aobias);
 
         /**
-         * Exposes the vision chip to uniform texture (such as a white piece
-         * of paper placed over the optics).  Take an image using the 
-         * getImage function.  Pass the uint16_t "img" array and the "size"
-         * number of pixels, along with a uint8_t "mask" array to hold
-         * the FPN mask and maskBase for the FPN mask base.  Function will
-         * populate the mask array and maskBase variable with the FPN mask,
-         * which can then be used with the applMask function. 
-         * @param img image pixels
-         * @param size number of pixels
-         * @param mask the image mask (should be same size as img)
-         * @param maskBase gets smallest value of any pixel in img
-         */
-        void calcMask(uint16_t *img, uint16_t size, uint8_t *mask, uint16_t *maskBase);
-
-        /**
-         * Given the "mask" and "maskBase" variables calculated in        
-         * calcMask, and a current image, subtracts the
-         * mask to provide a calibrated image.
-         * @param img image pixels
-         * @param size number of pixels
-         * @param mask the image mask (should be same size as img)
-         * @param maskBase previously-obtained smallest value of any pixel in img
-          */
-        void applyMask(uint16_t *img, uint16_t size, uint8_t *mask, uint16_t maskBase);
-
-        /**
          * Acquires a box section of an image
          * from the analog output, and and saves to image array img.  Note 
          * that images are read out in 

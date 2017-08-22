@@ -24,8 +24,6 @@ setVref				KEYWORD2
 setNbias			KEYWORD2
 setAobias			KEYWORD2
 setBiasesVdd			KEYWORD2
-calcMask			KEYWORD2
-applyMask			KEYWORD2
 getImageAnalog			KEYWORD2
 getImageDigital			KEYWORD2
 getImageRowSumAnalog		KEYWORD2
@@ -46,6 +44,8 @@ sendVectors			KEYWORD2
 sendPoints			KEYWORD2    
 
 # ImageUtils
+imgCalcMask			KEYWORD2
+imgApplyMask			KEYWORD2
 imgCopy				KEYWORD2
 imgDumpAscii			KEYWORD2
 imgDumpMatlab			KEYWORD2

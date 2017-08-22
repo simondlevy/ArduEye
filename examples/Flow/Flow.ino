@@ -156,7 +156,7 @@ static void processCommands()
                 {
                     ImageBounds bounds(sr,row,skiprow,sc,col,skipcol);
                     stonyman.getImage(current_img, inputPin, bounds);
-                    stonyman.calcMask(current_img,row*col,mask,&mask_base);
+                    imgCalcMask(current_img,row*col,mask,&mask_base);
                     Serial.println("FPN Mask done");  
                 }
                 break;   
@@ -217,7 +217,7 @@ void loop()
     //apply an FPNMask to the image.  This needs to be calculated with the "f" command
     //while the vision chip is covered with a white sheet of paper to expose it to 
     //uniform illumination.  Once calculated, it will remove fixed-pattern noise  
-    stonyman.applyMask(current_img,row*col,mask,mask_base);
+    imgApplyMask(current_img,row*col,mask,mask_base);
 
     //if GUI is enabled then send image for display
     gui.sendImage(row,col,current_img,row*col);

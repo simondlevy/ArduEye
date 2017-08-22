@@ -50,8 +50,9 @@
 // INCLUDE FILES. The top two files are part of the ArduEye library and should
 // be included in the Arduino "libraries" folder.
 
-#include <Stonyman.h>   // Stonyman vision chip library
-#include <GUIClient.h>  // Processing GUI interface
+#include <Stonyman.h>       // Stonyman vision chip library
+#include <ImageUtils.h>     // Image utilities library
+#include <GUIClient.h>      // Processing GUI interface
 
 #include <SPI.h>  //SPI library is needed to use an external ADC
 
@@ -143,7 +144,7 @@ void processCommands()
                 {
                     ImageBounds bounds(sr,row,skiprow,sc,col,skipcol);
                     stonyman.getImage(img, input, bounds);
-                    stonyman.calcMask(img,row*col,mask,&mask_base);
+                    imgCalcMask(img,row*col,mask,&mask_base);
                     Serial.println("FPN Mask done");  
                 }
                 break;   
@@ -205,7 +206,7 @@ void loop()
     //apply an FPNMask to the image.  This needs to be calculated with the "f" command
     //while the vision chip is covered with a white sheet of paper to expose it to 
     //uniform illumination.  Once calculated, it will remove fixed-pattern noise  
-    stonyman.applyMask(img,row*col,mask,mask_base);
+    imgApplyMask(img,row*col,mask,mask_base);
 
     /***********************************************************************************/
     /***********************************************************************************/

@@ -218,3 +218,38 @@ void imgSubwin2Dto1DVertical(
         uint8_t subcol, 
         uint8_t dstnumpix, 
         uint8_t dstpixlength);
+
+/**
+ * Calculates a fixed-pattern-noise mask for an image.
+ *
+ * @param img image pixels
+ * @param size number of pixels
+ * @param mask the image mask (should be same size as img)
+ * @param maskBase gets smallest value of any pixel in img
+ *
+ * Usage: 
+ * <ol>
+ * <li> Expose the vision chip to uniform texture (such as a white piece
+ * of paper placed over the optics).  
+ * <li> Take an image; e.g. using the Stonyman getImage function.  
+ * <li> Pass the "img" array and the "size" * number of pixels, along with a "mask" array to hold
+ * the FPN mask and maskBase for the FPN mask base.  
+ * </ol>
+ * Function will * populate the mask array and maskBase variable with the FPN mask,
+ * which can then be used with the applMask function. 
+*/
+void imgCalcMask(uint16_t *img, uint16_t size, uint8_t *mask, uint16_t *maskBase);
+
+/**
+ * Given the "mask" and "maskBase" variables calculated in        
+ * calcMask, and a current image, subtracts the
+ * mask to provide a calibrated image.
+ *
+ * @param img image pixels
+ * @param size number of pixels
+ * @param mask the image mask (should be same size as img)
+ * @param maskBase previously-obtained smallest value of any pixel in img
+ */
+void imgApplyMask(uint16_t *img, uint16_t size, uint8_t *mask, uint16_t maskBase);
+
+

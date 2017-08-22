@@ -258,29 +258,6 @@ void Stonyman::setBinning(uint8_t hbin,uint8_t vbin)
     set_pointer_value(SMH_SYS_VSW,vsw);
 }
 
-void Stonyman::calcMask(uint16_t *img, uint16_t size, uint8_t *mask,uint16_t *maskBase)
-{
-    *maskBase = 10000; // e.g. "high"
-
-    for (uint16_t i=0; i<size; ++i)
-        if (img[i]<(*maskBase))	//find the min value for maskBase
-            *maskBase = img[i];
-
-    // generate calibration mask
-    for (uint16_t i=0; i<size; ++i)
-        mask[i] = img[i] - *maskBase;	//subtract min value for mask
-}
-
-void Stonyman::applyMask(uint16_t *img, uint16_t size, uint8_t *mask, uint16_t maskBase)
-{
-    // Subtract calibration mask
-    for (uint16_t i=0; i<size;++i) 
-    {
-        img[i] -= maskBase+mask[i];  //subtract FPN mask
-        img[i]=-img[i];          //negate image so it displays properly
-    }
-}
-
 //helper class for grabbing images and storing them in an array
 class ArrayFrameGrabber : protected FrameGrabber {
 
