@@ -149,7 +149,7 @@ class ImageBounds {
 /**
  *	A class for interacting with the Stonyman2 vision chip from Centeye, Inc.
  *  For documentation on this chip see 
- *  https://github.com/simondlevy/Centeye/blob/master/extras/docs/Stonyman_Hawksbill_ChipInstructions_Rev10_20130312.pdf
+ *  https://github.com/simondlevy/ArduEye/blob/master/extras/docs/Stonyman_Hawksbill_ChipInstructions_Rev10_20130312.pdf
  */
 class Stonyman 
 {
