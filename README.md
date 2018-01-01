@@ -1,4 +1,4 @@
-<img src="ardueye.png">
+<img src="ardueye.png" width=500>
 
 This repository contains Aruduino libraries for using the Stonyman2 vision chip from Centeye, Inc.
 Most of this code was adapted from the original [ArduEye repositories](https://github.com/ArduEye) 
