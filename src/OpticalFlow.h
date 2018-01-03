@@ -1,5 +1,5 @@
 /*
-   OpticalFlow.cpp Functions to calculate optical flow and odometry
+   OpticalFlow.h Functions to calculate optical flow and odometry
 
    Copyright (c) 2012 Centeye, Inc. 
    All rights reserved.
@@ -33,6 +33,10 @@
 #pragma once
 
 #include <stdint.h>
+
+// Choose one
+typedef uint8_t  pixel_t;
+//typedef uint16_t pixel_t;
 
 /**
  *	Changes current optical flow value by low-pass filter with new.
@@ -77,12 +81,7 @@ bool ofoAccumulate(int16_t new_OF, int16_t *acc_OF, int16_t threshold);
  *	@param scale value of one pixel of motion (for scaling output)
  *	@param out pointer to integer value for output.
  */
-void ofoIIA_1D(uint8_t *curr_img, uint8_t *last_img, uint8_t numpix, uint16_t scale, int16_t *out);
-
-/**
- * Sixteen-bit version of above
- */
-void ofoIIA_1D(uint16_t *curr_img, uint16_t *last_img, uint8_t numpix, uint16_t scale, int16_t *out);
+void ofoIIA_1D(pixel_t * curr_img, pixel_t * last_img, uint8_t numpix, uint16_t scale, int16_t *out);
 
 /**
  *  Runs a two-dimensional version of the Srinivasan algorithm, using a plus-shaped configuration of pixels
@@ -96,22 +95,12 @@ void ofoIIA_1D(uint16_t *curr_img, uint16_t *last_img, uint8_t numpix, uint16_t 
  *	@param ofy pointer to integer value for Y shift.
  */
 
-void ofoIIA_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
-
-/**
- * Sixteen-bit version of above.
- */
-void ofoIIA_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows,uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
+void ofoIIA_Plus_2D(pixel_t * curr_img, pixel_t * last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
 
 /**
  * Same as above, using square configuration
  */
-void ofoIIA_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
-
-/**
- * Sixteen-bit version of above.
- */
-void ofoIIA_Square_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
+void ofoIIA_Square_2D(pixel_t * curr_img, pixel_t * last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
 
 /**
  *	Computes optical flow in plus configuration between two images using the algorithm desribed in
@@ -142,19 +131,9 @@ void ofoIIA_Square_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uin
  *	@param ofx pointer to integer value for X shift.
  *	@param ofy pointer to integer value for Y shift.
  */
-void ofoLK_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy);
-
-/**
- *	Sixteen-bit version of above.
- */
-void ofoLK_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
+void ofoLK_Plus_2D(pixel_t * curr_img, pixel_t * last_img, uint16_t rows, uint16_t cols, uint16_t scale, int16_t * ofx, int16_t * ofy);
 
 /**
  * Same as above, using square pixel configuration
  */
-void ofoLK_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
-
-/**
- * Sixteen-bit version of above
- */
-void ofoLK_Square_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);
+void ofoLK_Square_2D(pixel_t * curr_img, pixel_t * last_img, uint16_t rows, uint16_t cols, uint16_t scale,int16_t * ofx,int16_t * ofy);

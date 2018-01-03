@@ -20,3 +20,7 @@ The <b>extras</b> folder contains:
 <li> <b>standalone</b> standalone C++ programs (not requiring Stonyman) for optical flow and ASCII imaging
 </ul>
 
+To use the optical flow library, first make sure that the [type definition](src/OpticalFlow.h#L37-L39) for pixels (eight-bit or sixteen-bit) agrees
+with your image format, commenting-out the appropriate line as needed.  Most image-acquition systems (like OpenCV) use eight-bit grayscale
+images, whereas the Stonyman2 chip uses sixteen bits.
+
