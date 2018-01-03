@@ -8,6 +8,9 @@ SRC = ../../src
 
 all: asciicap flowcap
 
+flow: flowcap
+	./flowcap
+
 flowcap: flowcap.o OpticalFlow.o
 	g++  -g -o flowcap  flowcap.o OpticalFlow.o `pkg-config opencv --libs`
 

@@ -1,6 +1,6 @@
 /*
-flowcap.cpp illustrates ArduEye_OFO_v1 library by running 
-optical flow on images from your webcam.
+flowcap.cpp illustrates ArduEye OpticalFlow library by running optical flow on
+images from your webcam.
 
 Copyright (C) 2017 Simon D. Levy
 
@@ -14,13 +14,15 @@ Requires: OpenCV
 
 #include <OpticalFlow.h>
 
-static const uint8_t  SCALEDOWN = 8;
+// These params work well with the 640x480 image of a typical webcam
+static const uint8_t  IMAGE_SCALEDOWN = 8;
+static const uint8_t  PATCHES_PER_ROW = 8;
 
 // Flow display
 static const cv::Scalar LINECOLOR = cv::Scalar(0, 255, 0); // green
 static const cv::Scalar CIRCCOLOR = cv::Scalar(0, 0, 255); // red
-static const uint8_t LINESCALE  = 20;
 static const uint8_t CIRCRADIUS = 3;
+static const uint16_t FLOWSCALE = 20;
 
 static long millis() 
 {
@@ -34,15 +36,20 @@ static void computeFlow(cv::Mat & prev, cv::Mat & curr, cv::Mat & colorimage)
     // Grab flow for this patch from the scaled-down previous and current images
     //rect_t rect = {x, y, PATCHSIZE, PATCHSIZE};
     int16_t ofx=0, ofy=0;
-    ofoLK_Plus_2D((uint8_t *)curr.data, (uint8_t *)prev.data, curr.rows, curr.cols, 10, &ofx, &ofy);
+    ofoLK_Plus_2D((uint8_t *)curr.data, (uint8_t *)prev.data, curr.rows, curr.cols, FLOWSCALE, &ofx, &ofy);
 
     // Add flow arrows to the scaled-up display image
-    int cx = colorimage.cols/2;
-    int cy = colorimage.rows/2;
-    cv::Point ctr = cv::Point(cx,cy);
-    cv::Point end = cv::Point(cx+ofx*LINESCALE,cy+ofy*LINESCALE);
-    cv::line(colorimage, ctr, end, LINECOLOR);
-    cv::circle(colorimage, end, CIRCRADIUS, CIRCCOLOR);
+    uint8_t patchsize = colorimage.cols/PATCHES_PER_ROW;
+    for (int y=0; y<colorimage.rows; y+=patchsize) {
+        for (int x=0; x<colorimage.cols; x+=patchsize) {
+            int cx = x + patchsize/2;
+            int cy = y + patchsize/2;
+            cv::Point ctr = cv::Point(cx,cy);
+            cv::Point end = cv::Point(cx+ofx,cy+ofy);
+            cv::line(colorimage, ctr, end, LINECOLOR);
+            cv::circle(colorimage, end, CIRCRADIUS, CIRCCOLOR);
+        }
+    }
 }
 
 int main(int argc, char** argv)
@@ -64,8 +71,8 @@ int main(int argc, char** argv)
     // We will use the previous and current frame to compute optical flow
     cv::Mat prev;
 
-    while (true)
-    {
+    while (true) {
+
         // Capture frame-by-frame
         cv::Mat frame;
         cap >> frame; 
@@ -76,11 +83,11 @@ int main(int argc, char** argv)
 
         // Scale down to image to be used as current for optical flow
         cv::Mat curr;
-        cv::resize(gray, curr, cv::Size(), 1./SCALEDOWN, 1./SCALEDOWN);
+        cv::resize(gray, curr, cv::Size(), 1./IMAGE_SCALEDOWN, 1./IMAGE_SCALEDOWN);
 
         // Scale back up for display
         cv::Mat display;
-        cv::resize(curr, display, cv::Size(), SCALEDOWN, SCALEDOWN, cv::INTER_NEAREST);
+        cv::resize(curr, display, cv::Size(), IMAGE_SCALEDOWN, IMAGE_SCALEDOWN, cv::INTER_NEAREST);
 
         // Convert display image to color to support flow arrows
         cv::Mat cdisplay;
