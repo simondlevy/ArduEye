@@ -129,9 +129,9 @@ void ofoIIA_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t
     uint8_t *fz = last_img + cols + 1; 	//time-shifted image
 
     // loop through
-    for (uint8_t r=1; r<rows-1; ++r) { 
+    for (uint16_t r=1; r<rows-1; ++r) { 
 
-        for (uint8_t c=1; c<cols-1; ++c) { 
+        for (uint16_t c=1; c<cols-1; ++c) { 
 
             // compute differentials, then increment pointers 
             int16_t F2F1 = (*(f2++) - *(f1++));
@@ -182,9 +182,9 @@ void ofoIIA_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows,uint16
     uint16_t *fz = last_img + cols + 1; 	//time-shifted image
 
     // loop through
-    for (uint8_t r=1; r<rows-1; ++r) { 
+    for (uint16_t r=1; r<rows-1; ++r) { 
 
-        for (uint8_t c=1; c<cols-1; ++c) { 
+        for (uint16_t c=1; c<cols-1; ++c) { 
             // compute differentials, then increment pointers 
             int16_t F2F1 = (*(f2++) - *(f1++));
             int16_t F4F3 = (*(f4++) - *(f3++));
@@ -232,9 +232,9 @@ void ofoIIA_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16
     uint8_t *fz = last_img; 		//top left time-shifted
 
     // loop through
-    for (uint8_t r=0; r<rows-1; ++r) { 
+    for (uint16_t r=0; r<rows-1; ++r) { 
 
-        for (uint8_t c=0; c<cols-1; ++c) { 
+        for (uint16_t c=0; c<cols-1; ++c) { 
 
             // compute differentials
             int16_t F2F1 = ((*(f0) - *(f1)) + (*(f2) - *(f3))) ;
@@ -290,9 +290,9 @@ void ofoIIA_Square_2D(uint16_t *curr_img,uint16_t *last_img, uint16_t rows,uint1
     uint16_t *fz = last_img; 		//top left time-shifted
 
     // loop through
-    for (uint8_t r=0; r<rows-1; ++r) { 
+    for (uint16_t r=0; r<rows-1; ++r) { 
 
-        for (uint8_t c=0; c<cols-1; ++c) { 
+        for (uint16_t c=0; c<cols-1; ++c) { 
 
             // compute differentials
             int16_t F2F1 = ((*(f0) - *(f1)) + (*(f2) - *(f3))) ;
@@ -350,9 +350,9 @@ void ofoLK_Plus_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_t 
     uint8_t *fz = last_img + cols + 1; 	//time-shifted image
 
     // loop through
-    for (uint8_t r=1; r<rows-1; ++r) { 
+    for (uint16_t r=1; r<rows-1; ++r) { 
 
-        for (uint8_t c=1; c<cols-1; ++c) { 
+        for (uint16_t c=1; c<cols-1; ++c) { 
 
             // compute differentials, then increment pointers (post 		// increment)
             F2F1 = (*(f2++) - *(f1++));	//horizontal differential
@@ -401,8 +401,8 @@ void ofoLK_Plus_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows,uint16_
     uint16_t *fz = last_img + cols + 1; 	//time-shifted image
 
     // loop through
-    for (uint8_t r=1; r<rows-1; ++r) { 
-        for (uint8_t c=1; c<cols-1; ++c) { 
+    for (uint16_t r=1; r<rows-1; ++r) { 
+        for (uint16_t c=1; c<cols-1; ++c) { 
             // compute differentials, then increment pointers (post 		// increment)
             F2F1 = (*(f2++) - *(f1++));	//horizontal differential
             F4F3 = (*(f4++) - *(f3++));	//vertical differential
@@ -448,9 +448,9 @@ void ofoLK_Square_2D(uint8_t *curr_img, uint8_t *last_img, uint16_t rows,uint16_
     uint8_t *fz = last_img; 		//top left time-shifted
 
     // loop through
-    for (uint8_t r=0; r<rows-1; ++r) { 
+    for (uint16_t r=0; r<rows-1; ++r) { 
 
-        for (uint8_t c=0; c<cols-1; ++c) { 
+        for (uint16_t c=0; c<cols-1; ++c) { 
 
             // compute differentials      
             int16_t F2F1 = ((*(f0) - *(f1)) + (*(f2) - *(f3))) ;
@@ -506,9 +506,9 @@ void ofoLK_Square_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uint
 
 
     // loop through
-    for (uint8_t r=0; r<rows-1; ++r) { 
+    for (uint16_t r=0; r<rows-1; ++r) { 
 
-        for (uint8_t c=0; c<cols-1; ++c) { 
+        for (uint16_t c=0; c<cols-1; ++c) { 
 
             // compute differentials
             int16_t F2F1 = (*(f0) - *(f1)) + (*(f2) - *(f3))  ;
