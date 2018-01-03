@@ -57,18 +57,18 @@ bool ofoAccumulate(int16_t new_OF, int16_t *acc_OF, int16_t threshold);
  *	Runs a one-dimensional version of the image interpolation algorithm (IIA) described in
  *
  *  \@article{Srinivasan1994,<br>
- *  &nbsp;&nbsp;&nbsp;&nbsp;author="Srinivasan, M. V.",<br>
- *  &nbsp;&nbsp;&nbsp;&nbsp;title="An image-interpolation technique for the computation of optic flow and egomotion",<br>
- *  &nbsp;&nbsp;&nbsp;&nbsp;journal="Biological Cybernetics",<br>
- *  &nbsp;&nbsp;&nbsp;&nbsp;year="1994",<br>
- *  &nbsp;&nbsp;&nbsp;&nbsp;month="Sep",<br>
- *  &nbsp;&nbsp;&nbsp;&nbsp;day="01",<br>
- *  &nbsp;&nbsp;&nbsp;&nbsp;volume="71",<br>
- *  &nbsp;&nbsp;&nbsp;&nbsp;number="5",<br>
- *  &nbsp;&nbsp;&nbsp;&nbsp;pages="401--415",<br>
- *  &nbsp;&nbsp;&nbsp;&nbsp;issn="1432-0770",<br>
- *  &nbsp;&nbsp;&nbsp;&nbsp;doi="10.1007/BF00198917",<br>
- *  &nbsp;&nbsp;&nbsp;&nbsp;url="https://doi.org/10.1007/BF00198917"<br>
+ *  author="Srinivasan, M. V.",<br>
+ *  title="An image-interpolation technique for the computation of optic flow and egomotion",<br>
+ *  journal="Biological Cybernetics",<br>
+ *  year="1994",<br>
+ *  month="Sep",<br>
+ *  day="01",<br>
+ *  volume="71",<br>
+ *  number="5",<br>
+ *  pages="401--415",<br>
+ *  issn="1432-0770",<br>
+ *  doi="10.1007/BF00198917",<br>
+ *  url={https://doi.org/10.1007/BF00198917}<br>
  *  }
  *
  *	@param curr_img pixels of current image
@@ -117,18 +117,18 @@ void ofoIIA_Square_2D(uint16_t *curr_img, uint16_t *last_img, uint16_t rows, uin
  *	Computes optical flow in plus configuration between two images using the algorithm desribed in
  *
  * \@inproceedings{Lucas:1981:IIR:1623264.1623280,<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;author = {Lucas, Bruce D. and Kanade, Takeo},<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;title = {An Iterative Image Registration Technique with an Application to Stereo Vision},<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;booktitle = {Proceedings of the 7th International Joint Conference on Artificial Intelligence - Volume 2},<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;series = {IJCAI'81},<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;year = {1981},<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;location = {Vancouver, BC, Canada},<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;pages = {674--679},<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;numpages = {6},<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;url = {http://dl.acm.org/citation.cfm?id=1623264.1623280},<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;acmid = {1623280},<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;publisher = {Morgan Kaufmann Publishers Inc.},<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;address = {San Francisco, CA, USA}<br>
+ * author = {Lucas, Bruce D. and Kanade, Takeo},<br>
+ * title = {An Iterative Image Registration Technique with an Application to Stereo Vision},<br>
+ * booktitle = {Proceedings of the 7th International Joint Conference on Artificial Intelligence - Volume 2},<br>
+ * series = {IJCAI'81},<br>
+ * year = {1981},<br>
+ * location = {Vancouver, BC, Canada},<br>
+ * pages = {674--679},<br>
+ * numpages = {6},<br>
+ * url = {http://dl.acm.org/citation.cfm?id=1623264.1623280},<br>
+ * acmid = {1623280},<br>
+ * publisher = {Morgan Kaufmann Publishers Inc.},<br>
+ * address = {San Francisco, CA, USA}<br>
  * }
  *	
  *	This algorithm assumes that displacements are generally on the order of one pixel or less. 
