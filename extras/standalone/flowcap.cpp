@@ -34,7 +34,7 @@ static void computeFlow(cv::Mat & prev, cv::Mat & curr, cv::Mat & colorimage)
     // Grab flow for this patch from the scaled-down previous and current images
     //rect_t rect = {x, y, PATCHSIZE, PATCHSIZE};
     int16_t ofx=0, ofy=0;
-    LK_Plus_2D((uint8_t *)curr.data, (uint8_t *)prev.data, curr.rows, curr.cols, 10, &ofx, &ofy);
+    ofoLK_Plus_2D((uint8_t *)curr.data, (uint8_t *)prev.data, curr.rows, curr.cols, 10, &ofx, &ofy);
 
     // Add flow arrows to the scaled-up display image
     int cx = colorimage.cols/2;
