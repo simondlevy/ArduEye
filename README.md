@@ -21,6 +21,6 @@ The <b>extras</b> folder contains:
 </ul>
 
 To use the optical flow library, first make sure that the [type definition](src/OpticalFlow.h#L36-L40) for pixels (eight-bit or sixteen-bit) agrees
-with your image format, commenting-out the appropriate line as needed.  Most image-acquition systems (like OpenCV) use eight-bit grayscale
+with your image format, commenting-out the appropriate line as needed.  Most image-acquisition systems (like OpenCV) use eight-bit grayscale
 images, whereas the Stonyman2 chip uses sixteen bits.
 
