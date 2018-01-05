@@ -35,19 +35,16 @@ static long millis()
     return tp.tv_sec * 1000 + tp.tv_usec / 1000;
 }
 
-static void addFlow(cv::Mat & image, int16_t ofx, int16_t ofy)
+static void addFlow(cv::Mat & image, int16_t ofx, int16_t ofy, int x, int y)
 {
     uint8_t patchsize = image.cols/PATCHES_PER_ROW;
-    for (int y=0; y<image.rows; y+=patchsize) {
-        for (int x=0; x<image.cols; x+=patchsize) {
-            int cx = x + patchsize/2;
-            int cy = y + patchsize/2;
-            cv::Point ctr = cv::Point(cx,cy);
-            cv::Point end = cv::Point(cx+ofx,cy+ofy);
-            cv::line(image, ctr, end, LINECOLOR);
-            cv::circle(image, end, CIRCRADIUS, CIRCCOLOR);
-        }
-    }
+
+    int cx = x*patchsize + patchsize/2;
+    int cy = y*patchsize + patchsize/2;
+    cv::Point ctr = cv::Point(cx,cy);
+    cv::Point end = cv::Point(cx+ofx,cy+ofy);
+    cv::line(image, ctr, end, LINECOLOR);
+    cv::circle(image, end, CIRCRADIUS, CIRCCOLOR);
 }
 
 int main(int argc, char** argv)
@@ -97,7 +94,12 @@ int main(int argc, char** argv)
             int16_t ofx=0, ofy=0;
             ofoLK_Plus_2D((uint8_t *)curr.data, (uint8_t *)prev.data, curr.rows, curr.cols, FLOWSCALE, &ofx, &ofy);
 
-            addFlow(cdisplay, ofx, ofy);
+            for (int x=0; x<PATCHES_PER_ROW; ++x) {
+                for (int y=0; y<PATCHES_PER_ROW; ++y) {
+                    addFlow(cdisplay, ofx, ofy, x, y);
+                }
+            }
+
         }
 
         // Display the image with flow arrows
