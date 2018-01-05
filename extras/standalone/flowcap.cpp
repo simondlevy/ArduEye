@@ -14,6 +14,10 @@ Requires: OpenCV
 
 #include <OpticalFlow.h>
 
+// Standard webcam image size
+static const int cam_cols = 640;
+static const int cam_rows = 480;
+
 // These params work well with the 640x480 image of a typical webcam
 static const uint8_t  IMAGE_SCALEDOWN = 8;
 static const uint8_t  PATCHES_PER_ROW = 8;
@@ -31,23 +35,17 @@ static long millis()
     return tp.tv_sec * 1000 + tp.tv_usec / 1000;
 }
 
-static void computeFlow(cv::Mat & prev, cv::Mat & curr, cv::Mat & colorimage)
+static void addFlow(cv::Mat & image, int16_t ofx, int16_t ofy)
 {
-    // Grab flow for this patch from the scaled-down previous and current images
-    //rect_t rect = {x, y, PATCHSIZE, PATCHSIZE};
-    int16_t ofx=0, ofy=0;
-    ofoLK_Plus_2D((uint8_t *)curr.data, (uint8_t *)prev.data, curr.rows, curr.cols, FLOWSCALE, &ofx, &ofy);
-
-    // Add flow arrows to the scaled-up display image
-    uint8_t patchsize = colorimage.cols/PATCHES_PER_ROW;
-    for (int y=0; y<colorimage.rows; y+=patchsize) {
-        for (int x=0; x<colorimage.cols; x+=patchsize) {
+    uint8_t patchsize = image.cols/PATCHES_PER_ROW;
+    for (int y=0; y<image.rows; y+=patchsize) {
+        for (int x=0; x<image.cols; x+=patchsize) {
             int cx = x + patchsize/2;
             int cy = y + patchsize/2;
             cv::Point ctr = cv::Point(cx,cy);
             cv::Point end = cv::Point(cx+ofx,cy+ofy);
-            cv::line(colorimage, ctr, end, LINECOLOR);
-            cv::circle(colorimage, end, CIRCRADIUS, CIRCCOLOR);
+            cv::line(image, ctr, end, LINECOLOR);
+            cv::circle(image, end, CIRCRADIUS, CIRCCOLOR);
         }
     }
 }
@@ -95,7 +93,11 @@ int main(int argc, char** argv)
 
         // Compute and optical flow when previous image available
         if (!prev.empty()) {
-            computeFlow(prev, curr, cdisplay);
+
+            int16_t ofx=0, ofy=0;
+            ofoLK_Plus_2D((uint8_t *)curr.data, (uint8_t *)prev.data, curr.rows, curr.cols, FLOWSCALE, &ofx, &ofy);
+
+            addFlow(cdisplay, ofx, ofy);
         }
 
         // Display the image with flow arrows
