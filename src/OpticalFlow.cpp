@@ -32,6 +32,8 @@
 
 #include <OpticalFlow.h>
 
+#include <stdio.h>
+
 void ofoLPF(int16_t *filtered_OF, int16_t *new_OF, float alpha)
 {
     (*filtered_OF)=(*filtered_OF)+((float)(*new_OF)-(*filtered_OF))	*alpha;
@@ -236,8 +238,8 @@ void ofoLK_Plus_2D(pixel_t * curr_img, pixel_t * last_img, uint16_t rows,uint16_
     // Compute final output. Note use of "scale" here to multiply 2*top   
     // to a larger number so that it may be meaningfully divided using 
     // fixed point arithmetic
-    int64_t XS = ( (int64_t)(b1)*A22 - (int64_t)(b2)*A12 ) * scale / 		detA;
-    int64_t YS = ( (int64_t)(b2)*A11 - (int64_t)(b1)*A12 ) * scale / 		detA;
+    int64_t XS = detA == 0 ? 0 : ( (int64_t)(b1)*A22 - (int64_t)(b2)*A12 ) * scale / detA;
+    int64_t YS = detA == 0 ? 0 : ( (int64_t)(b2)*A11 - (int64_t)(b1)*A12 ) * scale / detA;
 
     (*ofx) = (int16_t)XS;
     (*ofy) = (int16_t)YS;

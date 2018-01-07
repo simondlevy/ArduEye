@@ -12,11 +12,10 @@ Requires: OpenCV
 #include <stdio.h>
 #include <string.h>
 
-#include <OpticalFlow.h>
+#include <iostream>
+using namespace std;
 
-// Standard webcam image size
-static const int cam_cols = 640;
-static const int cam_rows = 480;
+#include <OpticalFlow.h>
 
 // These params work well with the 640x480 image of a typical webcam
 static const uint8_t  IMAGE_SCALEDOWN = 8;
@@ -39,8 +38,8 @@ static void addFlow(cv::Mat & image, int16_t ofx, int16_t ofy, int x, int y)
 {
     uint8_t patchsize = image.cols/PATCHES_PER_ROW;
 
-    int cx = x*patchsize + patchsize/2;
-    int cy = y*patchsize + patchsize/2;
+    int cx = x + patchsize/2;
+    int cy = y + patchsize/2;
     cv::Point ctr = cv::Point(cx,cy);
     cv::Point end = cv::Point(cx+ofx,cy+ofy);
     cv::line(image, ctr, end, LINECOLOR);
@@ -66,10 +65,18 @@ int main(int argc, char** argv)
     // We will use the previous and current frame to compute optical flow
     cv::Mat prev;
 
+    // Grab a frame to determine the webcam's image size
+    cv::Mat frame;
+    cap >> frame; 
+
+    // Set up patches for optical flow
+    int patchsize = frame.cols / IMAGE_SCALEDOWN / PATCHES_PER_ROW;
+    cv::Mat currpatch;
+    cv::Mat prevpatch;
+
     while (true) {
 
-        // Capture frame-by-frame
-        cv::Mat frame;
+        // Capture a new image frame
         cap >> frame; 
 
         // Convert frame to gray
@@ -80,7 +87,7 @@ int main(int argc, char** argv)
         cv::Mat curr;
         cv::resize(gray, curr, cv::Size(), 1./IMAGE_SCALEDOWN, 1./IMAGE_SCALEDOWN);
 
-        // Scale back up for display
+        // Scale back up for pixellated display
         cv::Mat display;
         cv::resize(curr, display, cv::Size(), IMAGE_SCALEDOWN, IMAGE_SCALEDOWN, cv::INTER_NEAREST);
 
@@ -88,18 +95,26 @@ int main(int argc, char** argv)
         cv::Mat cdisplay;
         cv::cvtColor(display, cdisplay, cv::COLOR_GRAY2BGR);
 
-        // Compute and optical flow when previous image available
+        // Compute and display optical flow when previous image available
         if (!prev.empty()) {
 
-            int16_t ofx=0, ofy=0;
-            ofoLK_Plus_2D((uint8_t *)curr.data, (uint8_t *)prev.data, curr.rows, curr.cols, FLOWSCALE, &ofx, &ofy);
+            for (int row=0; row<curr.rows; row+=patchsize) {
 
-            for (int x=0; x<PATCHES_PER_ROW; ++x) {
-                for (int y=0; y<PATCHES_PER_ROW; ++y) {
-                    addFlow(cdisplay, ofx, ofy, x, y);
+                for (int col=0; col<curr.cols; col+=patchsize) {
+
+                    // Copy a patch from the current and previous images
+                    cv::Rect rect(col, row, patchsize, patchsize);
+                    curr(rect).copyTo(currpatch);
+                    prev(rect).copyTo(prevpatch);
+
+                    // Compute optical flow on the patches
+                    int16_t ofx=0, ofy=0;
+                    ofoLK_Plus_2D(currpatch.data, prevpatch.data, patchsize, patchsize, FLOWSCALE, &ofx, &ofy);
+
+                    // Display the patch in the full-size pixellated image
+                    addFlow(cdisplay, ofx, ofy, col*IMAGE_SCALEDOWN, row*IMAGE_SCALEDOWN);
                 }
             }
-
         }
 
         // Display the image with flow arrows
