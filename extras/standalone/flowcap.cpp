@@ -109,7 +109,7 @@ int main(int argc, char** argv)
 
                     // Compute optical flow on the patches
                     int16_t ofx=0, ofy=0;
-                    ofoLK_Plus_2D(currpatch.data, prevpatch.data, patchsize, patchsize, FLOWSCALE, &ofx, &ofy);
+                    ofoLK_Square_2D(currpatch.data, prevpatch.data, patchsize, patchsize, FLOWSCALE, &ofx, &ofy);
 
                     // Display the patch in the full-size pixellated image
                     addFlow(cdisplay, ofx, ofy, col*IMAGE_SCALEDOWN, row*IMAGE_SCALEDOWN);
