@@ -6,85 +6,85 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-GUIClient			KEYWORD1
-Stonyman			KEYWORD1
-FrameGrabber			KEYWORD1
-ImageBounds			KEYWORD1
+GUIClient	KEYWORD1
+Stonyman	KEYWORD1
+FrameGrabber	KEYWORD1
+ImageBounds	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
 # Stonyman
-begin				KEYWORD2
-setConfig			KEYWORD2
-setAmpGain			KEYWORD2
-setBinning			KEYWORD2
-setVref				KEYWORD2
-setNbias			KEYWORD2
-setAobias			KEYWORD2
-setBiasesVdd			KEYWORD2
-processFrame			KEYWORD2
-processFrameVertical		KEYWORD2
+begin	KEYWORD2
+setConfig	KEYWORD2
+setAmpGain	KEYWORD2
+setBinning	KEYWORD2
+setVref	KEYWORD2
+setNbias	KEYWORD2
+setAobias	KEYWORD2
+setBiasesVdd	KEYWORD2
+processFrame	KEYWORD2
+processFrameVertical	KEYWORD2
 
 # StonymanUtils
-stonymanGetImage		KEYWORD2
-stonymanGetRowSum		KEYWORD2
-stonymanGetColSum		KEYWORD2
-stonymanFindMax			KEYWORD2
-stonymanDumpMatlab		KEYWORD2
+stonymanGetImage	KEYWORD2
+stonymanGetRowSum	KEYWORD2
+stonymanGetColSum	KEYWORD2
+stonymanFindMax	KEYWORD2
+stonymanDumpMatlab	KEYWORD2
 
 # GUIClient
-start				KEYWORD2
-stop				KEYWORD2
-sendEscChar			KEYWORD2
-sendDataByte			KEYWORD2
-getCommand			KEYWORD2
-sendImage			KEYWORD2
-sendVectors			KEYWORD2
-sendPoints			KEYWORD2    
+start	KEYWORD2
+stop	KEYWORD2
+sendEscChar	KEYWORD2
+sendDataByte	KEYWORD2
+getCommand	KEYWORD2
+sendImage	KEYWORD2
+sendVectors	KEYWORD2
+sendPoints	KEYWORD2
 
 # ImageUtils
-imgCalcMask			KEYWORD2
-imgApplyMask			KEYWORD2
-imgCopy				KEYWORD2
-imgDumpAscii			KEYWORD2
-imgDumpMatlab			KEYWORD2
-imgMin				KEYWORD2
-imgMax				KEYWORD2
-imgDiff				KEYWORD2
-imgAddFpn			KEYWORD2
-imgMakeFpn			KEYWORD2
-imgSubwin2D			KEYWORD2
+imgCalcMask	KEYWORD2
+imgApplyMask	KEYWORD2
+imgCopy	KEYWORD2
+imgDumpAscii	KEYWORD2
+imgDumpMatlab	KEYWORD2
+imgMin	KEYWORD2
+imgMax	KEYWORD2
+imgDiff	KEYWORD2
+imgAddFpn	KEYWORD2
+imgMakeFpn	KEYWORD2
+imgSubwin2D	KEYWORD2
 imgSubwin2Dto1DHorizontal	KEYWORD2
-imgSubwin2Dto1DVertical		KEYWORD2
+imgSubwin2Dto1DVertical	KEYWORD2
 
 # OpticalFlow
-ofoLPF				KEYWORD2
-ofoIIA_1D			KEYWORD2
-ofoIIA_Plus_2D			KEYWORD2
-ofoLK_Plus_2D			KEYWORD2
-ofoIIA_Square_2D		KEYWORD2
-ofoLK_Square_2D			KEYWORD2
+ofoLPF	KEYWORD2
+ofoIIA_1D	KEYWORD2
+ofoIIA_Plus_2D	KEYWORD2
+ofoLK_Plus_2D	KEYWORD2
+ofoIIA_Square_2D	KEYWORD2
+ofoLK_Square_2D	KEYWORD2
 
 # FrameGrabber
-preProcess			KEYWORD2
-handlePixel			KEYWORD2
-handleVectorStart		KEYWORD2
-handleVectorEnd			KEYWORD2
-postProcess			KEYWORD2
+preProcess	KEYWORD2
+handlePixel	KEYWORD2
+handleVectorStart	KEYWORD2
+handleVectorEnd	KEYWORD2
+postProcess	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
 #######################################
 
-MAX_ROWS    			LITERAL1
-MAX_COLS    			LITERAL1
-SKIP_PIXELS 			LITERAL1
-START_ROW   			LITERAL1
-START_COL   			LITERAL1
-START_PIXEL			LITERAL1
-MAX_PIXELS			LITERAL1
+MAX_ROWS	LITERAL1
+MAX_COLS	LITERAL1
+SKIP_PIXELS	LITERAL1
+START_ROW	LITERAL1
+START_COL	LITERAL1
+START_PIXEL	LITERAL1
+MAX_PIXELS	LITERAL1
 
 
 
