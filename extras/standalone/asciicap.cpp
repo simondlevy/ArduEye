@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 
         // Display the image in OpenCV
         cv::imshow("Hit ESC to quit", frame);
-        if(cv::waitKey(1) >= 0) break;
+        if(cv::waitKey(1) == 27) break;
 
         // Convert frame to gray
         cv::Mat gray;

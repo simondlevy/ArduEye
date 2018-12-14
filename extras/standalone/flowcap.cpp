@@ -121,7 +121,7 @@ int main(int argc, char** argv)
         char windowname[100];
         sprintf(windowname, "flow: %d x %d", curr.cols, curr.rows);
         cv::imshow(windowname, cdisplay);
-        if(cv::waitKey(1) >= 0) break;
+        if(cv::waitKey(1)  == 27) break; // exit on ESC
 
         // Current image becomes previous for next iteration
         curr.copyTo(prev);
